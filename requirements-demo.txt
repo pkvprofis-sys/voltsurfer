@@ -1,0 +1,9 @@
+# Abhängigkeiten für die öffentliche Web-Demo (app/demo.py).
+# Bewusst schlank: ohne OpenEMS-Kopplung und ohne Test-Werkzeuge.
+streamlit>=1.40
+plotly>=5.24
+pandas>=2.2
+numpy>=2.0
+requests>=2.32
+pyarrow>=17.0
+pulp>=2.9

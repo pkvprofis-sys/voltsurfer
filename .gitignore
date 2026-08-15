@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+data_cache/
+.pytest_cache/
+.streamlit/secrets.toml
+external/
+
+website/.env.local
+website/node_modules/
+website/.next/
+.agents/
+*.log

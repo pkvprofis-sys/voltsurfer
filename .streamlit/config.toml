@@ -1,0 +1,21 @@
+[theme]
+base = "dark"
+primaryColor = "#00E5A0"
+backgroundColor = "#0B1D33"
+secondaryBackgroundColor = "#122A47"
+textColor = "#E6EEF8"
+
+[server]
+headless = true
+runOnSave = true
+# Nötig, damit die App in einem iframe auf der Website laufen darf
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+# Kein Streamlit-Menü/Footer in der eingebetteten Demo
+toolbarMode = "minimal"
+showErrorDetails = false
