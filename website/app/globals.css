@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/*
+ * VoltSurfer — die Seite erzählt einen Tag an der Strombörse.
+ * Hell und freundlich; die Demo-Sektion ist die „Nacht" der Seite.
+ * Schriften: Bricolage Grotesque (Display), Instrument Sans (Text),
+ * IBM Plex Mono für alles, was ein Stromzähler anzeigen würde.
+ */
+@theme {
+  --color-paper: #ffffff;
+  --color-mist: #f4f7f6;
+  --color-sky: #edf4fb;
+  --color-ink: #0b1d33;
+  --color-ink-soft: #51667f;
+  --color-line: #e2e8ee;
+
+  --color-volt: #00a878;
+  --color-volt-bright: #00e5a0;
+  --color-volt-wash: #e4f8f0;
+  --color-night: #0b1d33;
+  --color-night-card: #14294a;
+  --color-ocean: #0284c7;
+  --color-sun: #f0a202;
+  --color-coral: #e05252;
+
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-instrument), system-ui, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-volt);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Der Surfer-Punkt reitet die Preiswelle entlang */
+@keyframes surf {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* Energie fließt entlang der Kurve */
+@keyframes flow {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+.animate-flow {
+  stroke-dasharray: 10 14;
+  animation: flow 1.6s linear infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 0.7s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-flow,
+  .animate-rise {
+    animation: none;
+  }
+}
