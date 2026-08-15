@@ -21,12 +21,12 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "VoltSurfer — Stromspeicher, der mitverdient",
   description:
-    "Batteriespeicher mit intelligentem Energiemanagement: lädt, wenn Strom billig ist, versorgt dein Haus, wenn er teuer ist. Bis zu 1.348 € Ersparnis im Jahr.",
+    "Mittags kostet Strom an der Börse 5 Cent, abends 14 — manchmal sogar weniger als nichts. VoltSurfer kauft in den günstigsten Stunden ein und versorgt damit dein Haus, wenn es teuer wird.",
   metadataBase: new URL("https://voltsurfer.de"),
   openGraph: {
     title: "VoltSurfer — Stromspeicher, der mitverdient",
     description:
-      "Bis zu 1.348 € im Jahr sparen — mit Speicher, dynamischem Tarif und § 14a-Netzentgelt.",
+      "Die günstigste Stunde wandert: im Sommer mittags, im Winter nachts. Dein Speicher entscheidet jeden Tag neu — bis zu 1.348 € im Jahr.",
     locale: "de_DE",
     type: "website",
   },
