@@ -95,14 +95,56 @@
   .choice input, .consent input { accent-color: var(--action); width: 18px; height: 18px; margin: 0; }
   .consent { display: grid; grid-template-columns: 18px 1fr; gap: var(--s-3); align-items: start; font-size: var(--t-small); font-weight: 400; color: var(--ink); }
   .consent a { text-decoration: underline; text-underline-offset: 3px; }
-  /* die Aufteilung 820 € heute und 528 € mit Verbund als ein Balken */
+  /* die Aufteilung "ab dem ersten Tag" und "mit Verbund" als ein Balken */
   .split-bar { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--line); }
-  .split-bar > span:first-child { flex: 0 0 61%; background: var(--accent); }
+  .split-bar > span:first-child { flex: 0 0 57%; background: var(--accent); }
   .split-bar > span:last-child { flex: 1 1 auto; background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 55%, transparent) 0 6px, transparent 6px 11px); }
   .split-legend { display: flex; justify-content: space-between; gap: var(--s-4); font-size: var(--t-small); }
   /* Tablet: die Preise brauchen dort zwei Bildschirme */
   @media (min-width: 640px) and (max-width: 1023px) { #pricing { --h: 2; } }
   .footnote { font-size: var(--t-label); color: var(--muted); max-width: 110ch; }
+  /* Rechner: Eingaben links, Ergebnis rechts (ein Bild aus der Simulation) */
+  .calc-form { display: grid; gap: var(--s-4); }
+  .calc-seg { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .calc-seg legend { font-size: var(--t-small); font-weight: 500; margin-bottom: var(--s-2); }
+  .calc-seg__row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-2); }
+  .calc-seg__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calc-seg label { position: relative; }
+  .calc-seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .calc-seg span { display: grid; place-items: center; min-height: 44px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); font-size: var(--t-body); transition: border-color .2s, background-color .2s, color .2s; }
+  .calc-seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
+  .calc-seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .calc-switch { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 44px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .calc-switch input { appearance: none; width: 44px; height: 26px; border-radius: 999px; background: var(--line-strong); position: relative; cursor: pointer; transition: background-color .2s; flex: none; margin: 0; }
+  .calc-switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); transition: transform .2s; }
+  .calc-switch input:checked { background: var(--accent); }
+  .calc-switch input:checked::after { transform: translateX(18px); background: var(--accent-ink); }
+  .calc-switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .calc-out { padding: var(--s-6); display: grid; gap: var(--s-5); align-content: start; }
+  .calc-out__nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
+  .calc-out__label { font-size: var(--t-small); color: var(--u-muted, var(--muted)); }
+  .calc-out__big { font: var(--display-weight) var(--t-h2)/1.05 var(--font-display); letter-spacing: var(--display-tracking); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .calc-out__mid { font: var(--display-weight) var(--t-stat)/1.1 var(--font-display); font-variant-numeric: tabular-nums; margin-top: var(--s-2); }
+  .calc-out__meta { font-size: var(--t-small); color: var(--u-muted, var(--muted)); }
+  .calc-chart { display: grid; gap: var(--s-2); }
+  .calc-chart__bars { height: 220px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; align-items: end; border-bottom: 1px solid var(--u-line, var(--line)); }
+  .calc-bar { display: flex; flex-direction: column-reverse; height: 100%; }
+  .calc-bar > i { display: block; border-radius: 3px 3px 0 0; transition: height .5s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * 45ms); }
+  .calc-bar > i:first-child { background: var(--accent); border-radius: 0; }
+  .calc-bar > i:last-child { background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 50%, transparent) 0 5px, transparent 5px 9px); }
+  .calc-chart__axis { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; font-size: var(--t-label); color: var(--u-muted, var(--muted)); text-align: center; }
+  .calc-legend { display: flex; flex-wrap: wrap; gap: var(--s-5); font-size: var(--t-small); }
+  .calc-legend span { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .calc-key { width: 14px; height: 14px; border-radius: 3px; background: var(--accent); }
+  .calc-key--plus { background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 50%, transparent) 0 4px, transparent 4px 7px); outline: 1px solid color-mix(in oklab, var(--accent) 50%, transparent); }
+  @media (max-width: 639px) { .calc-out { padding: var(--s-5); } .calc-chart__bars { height: 160px; gap: 3px; } .calc-chart__axis { gap: 3px; font-size: 11px; } .calc-out__nums { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .calc-bar > i { transition: none; } }
+  /* Tablet: Auswahl und Ergebnis nebeneinander, damit der Rechner auf einen Bildschirm passt */
+  @media (min-width: 640px) and (max-width: 1023px) { #rechner .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } #rechner .grid > * { grid-column: auto; } #rechner .calc-out { padding: var(--s-5); } #rechner .calc-out__nums { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 1279px) { .calc-chart__bars { height: 170px; } }
+  @media (min-width: 640px) and (max-width: 1023px) { #rechner .calc-chart__bars { height: 280px; } }
+  /* 1024 bis 1279: die Antworten bekommen mehr Breite, damit die Fragen auf einen Bildschirm passen */
+  @media (min-width: 1024px) and (max-width: 1279px) { #faq .grid > .span-5 { grid-column: 1 / span 4; } #faq .faq { grid-column: 5 / -1; } }
   /* die vier Zahlen als 2 x 2, so groß wie die Abschnittsüberschrift */
   #ersparnis .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--s-8); }
   #ersparnis .stats .t-stat { font-size: var(--t-h2); }
@@ -135,6 +177,7 @@
         </div>
       </div>
       <div class="nav__item"><a class="nav__link" href="#markt">Strompreise</a></div>
+      <div class="nav__item"><a class="nav__link" href="#rechner">Rechner</a></div>
       <div class="nav__item"><a class="nav__link" href="#pricing">Preise</a></div>
       <div class="nav__item"><a class="nav__link" href="#faq">Fragen</a></div>
     </nav>
@@ -293,17 +336,63 @@
       <div class="grid grid--top">
         <div class="span-5 stack-4">
           <p class="t-lead">Gerechnet für einen VoltSurfer 30 in einem Haus mit drei Personen und Wärmepumpe, gegen einen Festpreis von 35&nbsp;ct je Kilowattstunde.<sup>1</sup></p>
-          <p>Die 820&nbsp;€ entstehen ab dem Tag der Installation. Den Rest bringt der VoltSurfer-Verbund, sobald rund 20 bis 30 Speicher gemeinsam an der Börse verkaufen. Den gibt es noch nicht, deshalb rechnen wir dir beides getrennt vor.</p>
-          <div class="stack-3" role="img" aria-label="Von 1.348 Euro im Jahr entstehen 820 Euro ab dem ersten Tag, 528 Euro erst mit dem Verbund">
+          <p>Die 783&nbsp;€ entstehen ab dem Tag der Installation. Den Rest bringt der VoltSurfer-Verbund, sobald rund 20 bis 30 Speicher gemeinsam an der Börse verkaufen. Den gibt es noch nicht, deshalb rechnen wir dir beides getrennt vor.</p>
+          <div class="stack-3" role="img" aria-label="Von 1.370 Euro im Jahr entstehen 783 Euro ab dem ersten Tag, 587 Euro erst mit dem Verbund">
             <div class="split-bar"><span></span><span></span></div>
-            <div class="split-legend"><span>820 € ab dem ersten Tag</span><span class="muted">+ 528 € mit Verbund</span></div>
+            <div class="split-legend"><span>783 € ab dem ersten Tag</span><span class="muted">+ 587 € mit Verbund</span></div>
           </div>
         </div>
         <div class="span-6 start-7 stats" data-moment="counter-rolls">
-          <div><p class="t-stat">820 €</p><p class="t-small muted">im Jahr gespart, ab dem ersten Tag</p></div>
-          <div><p class="t-stat">1.348 €</p><p class="t-small muted">im Jahr, wenn der Verbund mitverkauft</p></div>
+          <div><p class="t-stat">783 €</p><p class="t-small muted">im Jahr gespart, ab dem ersten Tag</p></div>
+          <div><p class="t-stat">1.370 €</p><p class="t-small muted">im Jahr, wenn der Verbund mitverkauft</p></div>
           <div><p class="t-stat">15,6 ct</p><p class="t-small muted">liegen im Schnitt zwischen billigster und teuerster Stunde</p></div>
           <div><p class="t-stat">96 Tage</p><p class="t-small muted">mit Börsenpreisen unter null im letzten Jahr</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b · Rechner: Ersparnis je Haushalt, vorab mit der echten Simulation gerechnet (scripts/precompute_rechner.py → rechner.json) -->
+  <section class="section" id="rechner" style="--hm: 2" aria-labelledby="rechner-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-5">
+          <h2 id="rechner-h">Rechne dein Haus durch</h2>
+          <p class="t-lead">Gerechnet mit derselben Simulation wie oben: zwölf Monate echte Börsenpreise, gegen 35&nbsp;ct Festpreis.</p>
+          <form class="calc-form" id="calc" aria-label="Haushalt für den Rechner">
+            <fieldset class="calc-seg">
+              <legend>Personen im Haushalt</legend>
+              <div class="calc-seg__row">
+                <label><input type="radio" name="p" value="1"><span>1</span></label>
+                <label><input type="radio" name="p" value="2"><span>2</span></label>
+                <label><input type="radio" name="p" value="3" checked><span>3</span></label>
+                <label><input type="radio" name="p" value="4"><span>4</span></label>
+                <label><input type="radio" name="p" value="5"><span>5</span></label>
+              </div>
+            </fieldset>
+            <label class="calc-switch"><span>Solaranlage, 8&nbsp;kWp</span><input type="checkbox" name="pv" role="switch"></label>
+            <label class="calc-switch"><span>Wärmepumpe, 9&nbsp;kW</span><input type="checkbox" name="wp" role="switch" checked></label>
+            <label class="calc-switch"><span>E-Auto, 15.000&nbsp;km im Jahr</span><input type="checkbox" name="ea" role="switch"></label>
+            <fieldset class="calc-seg">
+              <legend>Speichergröße</legend>
+              <div class="calc-seg__row calc-seg__row--2">
+                <label><input type="radio" name="s" value="20"><span>VoltSurfer 20</span></label>
+                <label><input type="radio" name="s" value="30" checked><span>VoltSurfer 30</span></label>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="ui ui-panel calc-out span-6 start-7" aria-live="polite">
+          <div class="calc-out__nums">
+            <div><p class="calc-out__label">Gespart im Jahr, ab dem ersten Tag</p><p class="calc-out__big" data-calc="heute">783 €</p></div>
+            <div><p class="calc-out__label">Mit dem VoltSurfer-Verbund</p><p class="calc-out__mid" data-calc="verbund">bis 1.370 €</p></div>
+          </div>
+          <p class="calc-out__meta" data-calc="meta">Strombedarf 7.686 kWh im Jahr · rechnet sich in etwa 14 Jahren, mit Verbund in 8</p>
+          <div class="calc-chart" role="img" data-calc="chart" aria-label="Ersparnis je Monat von September bis August">
+            <div class="calc-chart__bars" data-calc="bars"><div class="calc-bar" style="--i:0"><i style="height:33.1%"></i><i style="height:42.1%"></i></div><div class="calc-bar" style="--i:1"><i style="height:35.4%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:2"><i style="height:28.1%"></i><i style="height:6.7%"></i></div><div class="calc-bar" style="--i:3"><i style="height:34.8%"></i><i style="height:2.8%"></i></div><div class="calc-bar" style="--i:4"><i style="height:24.2%"></i><i style="height:4.5%"></i></div><div class="calc-bar" style="--i:5"><i style="height:25.8%"></i><i style="height:3.9%"></i></div><div class="calc-bar" style="--i:6"><i style="height:55.1%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:7"><i style="height:67.4%"></i><i style="height:32.6%"></i></div><div class="calc-bar" style="--i:8"><i style="height:47.2%"></i><i style="height:39.3%"></i></div><div class="calc-bar" style="--i:9"><i style="height:29.2%"></i><i style="height:61.8%"></i></div><div class="calc-bar" style="--i:10"><i style="height:20.8%"></i><i style="height:28.7%"></i></div><div class="calc-bar" style="--i:11"><i style="height:29.2%"></i><i style="height:46.1%"></i></div></div>
+            <div class="calc-chart__axis" data-calc="axis"><span>Sep</span><span>Okt</span><span>Nov</span><span>Dez</span><span>Jan</span><span>Feb</span><span>Mär</span><span>Apr</span><span>Mai</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
+          </div>
+          <div class="calc-legend"><span><i class="calc-key"></i>ab dem ersten Tag</span><span><i class="calc-key calc-key--plus"></i>zusätzlich mit Verbund</span></div>
         </div>
       </div>
     </div>
@@ -413,8 +502,8 @@
           <ul class="checks">
             <li>20 kWh nutzbar, 11 kW Leistung</li>
             <li>LFP-Zellen für 6.000 Ladezyklen</li>
-            <li><span>555 € im Jahr ohne Wärmepumpe<sup>1</sup></span></li>
-            <li><span>1.005 € mit Verbund<sup>1</sup></span></li>
+            <li><span>507 € im Jahr ohne Wärmepumpe<sup>1</sup></span></li>
+            <li><span>983 € mit Verbund<sup>1</sup></span></li>
           </ul>
         </article>
         <article class="card card--plan is-featured span-4 start-9">
@@ -512,5 +601,6 @@
 <script type="module" src="assets/motion/motion.js"></script>
 <script type="module" src="assets/layout/layout.js"></script>
 <script type="module" src="assets/diagrams/mount.js"></script>
+<script type="module" src="rechner.js"></script>
 </body>
 </html>

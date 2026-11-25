@@ -42,7 +42,8 @@ Besucher kommen auf die Seite, lesen die Preisgeschichte, schauen sich die zwei 
 ## Evidence on Hand
 
 - Echte Day-Ahead-Börsenpreise DE-LU (energy-charts.info / SMARD), Auswertung 15.08.2025–15.08.2026: Tiefstpreis an 64 % der Tage mittags (Sommerhalbjahr 98 %), Ø Mittag 5,5 ct / Nacht 9,4 ct / Abend 14,1 ct, Ø Tagesspanne 15,6 ct, 6,0 % negative Viertelstunden an 27 % der Tage, Trend 3,4 % (2023) → 7,3 % (2026). Stundenprofile Sommer/Winter/Jahr liegen vor (früher `lib/preise.ts`).
-- Simulation (12 Monate, VoltSurfer 30, 3 Personen, Wärmepumpe, § 14a Modul 1, gegen 35 ct Festpreis): 820 €/Jahr ohne Verkauf, 1.348 € mit Verbund; Amortisation 13 bzw. 8 Jahre.
+- Simulation (15.08.2025–14.08.2026, VoltSurfer 30, 3 Personen, Wärmepumpe 9 kW, § 14a Modul 1, gegen 35 ct Festpreis): 783 €/Jahr ohne Verkauf, 1.370 € mit Verbund; Amortisation 14 bzw. 8 Jahre (Stand 25.11.2026, ersetzt die früheren 820 € / 1.348 €).
+- Rechner auf der Startseite: `scripts/precompute_rechner.py` rechnet 80 Haushalte (1–5 Personen × Solar 0/8 kWp × Wärmepumpe 0/9 kW × E-Auto 0/15.000 km × 20/30 kWh, jeweils ohne und mit Verkauf) mit der echten Simulation und schreibt `public/rechner.json`. Nach neuen Preisdaten neu laufen lassen (rund 7 Minuten mit 10 Prozessen).
 - Eigenes 3D-Rendering der Anlage (aufgeschnittenes Haus, Speicher, Wärmepumpe, Wallbox, Carport mit E-Auto, Netzanschluss) als `public/anlage/haus.png` plus Leitungsmaske `public/anlage/leitungen.png`. Rechte beim Betreiber. Nachtszene in Blautönen.
 - Keine Kundenstimmen, keine Referenzanlagen, keine Fotos von echten Installationen, keine Presse. Nichts davon erfinden.
 
