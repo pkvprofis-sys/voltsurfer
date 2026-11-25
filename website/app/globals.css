@@ -1,128 +1,141 @@
 @import "tailwindcss";
 
 /*
- * VoltSurfer — helle Verkaufsseite mit dunklen Ankern.
- *
- * Farbregel, die die ganze Seite trägt:
- *   volt (grün)     = funktioniert ab Installation
- *   sun (bernstein) = kommt mit dem VoltSurfer-Verbund
+ * VoltSurfer — helle, freundliche Energie-Welt.
+ * Weißer Grund, weiche Farbflächen je Abschnitt, ein klares Grün für
+ * "günstig / heute real", Koralle für "teuer", Sonnengelb für "mit dem Verbund".
  */
 @theme {
   --color-paper: #ffffff;
-  --color-mist: #f4f7f6;
-  --color-sky: #edf4fb;
-  --color-line: #e2e8ee;
+  --color-wolke: #f4f7fa;
+  --color-minze: #e6f7ef;
+  --color-himmel: #eaf2ff;
+  --color-sonne-hell: #fff4d6;
 
-  /* Text-Navy und Flächen-Navy sind bewusst verschieden: Die dunklen
-     Sektionen sollen wie eine eigene Oberfläche wirken, nicht wie
-     umgedrehter Text. */
-  --color-ink: #0b1d33;
-  --color-ink-soft: #51667f;
-  --color-night: #071528;
-  --color-night-card: #0e2440;
+  --color-tinte: #0e1b2c;
+  --color-tinte-weich: #4b5a6b;
+  --color-linie: #e2e8ef;
+  --color-grau-balken: #cfd8e2;
 
   --color-volt: #00a878;
-  --color-volt-bright: #00e5a0;
-  --color-volt-wash: #e4f8f0;
-  --color-ocean: #0284c7;
-  --color-sun: #d98600;
-  --color-sun-wash: #fdf3e2;
-  --color-coral: #c43c3c;
+  --color-volt-tief: #007a57;
+  --color-volt-dunkel: #006649;
+  --color-koralle: #e5484d;
+  --color-koralle-tief: #c02d2a;
+  --color-sonne: #ffc531;
+  --color-sonne-tief: #8a5a00;
 
-  --font-sans: var(--font-instrument), system-ui, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-instrument), system-ui, sans-serif;
-  --font-mono: var(--font-plex), ui-monospace, monospace;
+  --font-display: var(--font-gabarito), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-onest), system-ui, sans-serif;
+
+  --shadow-schwebe: 0 24px 48px -20px rgb(14 27 44 / 0.22), 0 4px 12px -2px rgb(14 27 44 / 0.06);
+  --shadow-knopf: 0 8px 18px -8px rgb(0 102 73 / 0.55);
 }
 
 html {
-  color-scheme: light;
   scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  color-scheme: light;
 }
 
 body {
   background: var(--color-paper);
-  color: var(--color-ink);
+  color: var(--color-tinte);
+  font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.7;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-volt-tief);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Zahlen springen nicht und stehen sauber untereinander */
+.zahl {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+a {
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1.5px;
+}
+
+::selection {
+  background: #bdebd6;
+  color: var(--color-tinte);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-volt);
+  outline: 2.5px solid var(--color-volt-tief);
   outline-offset: 3px;
-  border-radius: 6px;
 }
 
-/* Zahlen dürfen beim Umschalten oder Hochzählen nicht die Breite ändern */
-.num {
-  font-variant-numeric: tabular-nums;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c3ccd6 transparent;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c3ccd6;
+  border: 3px solid var(--color-paper);
+  border-radius: 99px;
 }
 
-/* Glas-Optik der dunklen Karten — bewusst nur an zwei Stellen der Seite */
-.glass {
-  background: rgb(255 255 255 / 0.045);
-  border: 1px solid rgb(255 255 255 / 0.1);
-  backdrop-filter: blur(12px);
+input::placeholder,
+textarea::placeholder {
+  color: #6b7a8b;
 }
 
-/* Der Surfer-Punkt reitet die Preiskurve entlang — die Marke, wörtlich genommen */
-@keyframes surf {
+/* Die eine Bewegung der Seite: Balken wachsen aus der Grundlinie,
+   von links nach rechts wie ein Tag, der vergeht. */
+@keyframes balken {
   from {
-    offset-distance: 0%;
+    transform: scaleY(0.12);
   }
   to {
-    offset-distance: 100%;
+    transform: scaleY(1);
   }
 }
-.animate-surf {
-  offset-rotate: 0deg;
-  animation: surf 22s linear infinite;
+.balken-wachsen {
+  transform-origin: bottom;
+  animation: balken 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes rise {
+@keyframes auftauchen {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
-.animate-rise {
-  animation: rise 0.7s ease-out both;
-}
-/* Gestaffelt statt gleichzeitig — sonst wirkt es wie Ladeverzögerung */
-.delay-1 {
-  animation-delay: 0.08s;
-}
-.delay-2 {
-  animation-delay: 0.16s;
-}
-.delay-3 {
-  animation-delay: 0.24s;
-}
-
-/* Der Negativtage-Streifen zieht beim Scroll-in von links auf */
-@keyframes wipe {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-.animate-wipe {
-  animation: wipe 1.1s ease-out both;
+.auftauchen {
+  animation: auftauchen 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .animate-surf,
-  .animate-rise,
-  .animate-wipe {
+  .balken-wachsen,
+  .auftauchen {
     animation: none;
+  }
+  * {
+    transition-duration: 0s !important;
   }
 }

@@ -13,7 +13,7 @@ npm run dev
 ```
 
 Läuft dann auf http://localhost:3000. Ohne ausgefüllte `.env.local` funktioniert
-alles außer Kontaktformular und Live-Demo — an deren Stelle erscheinen Hinweise.
+alles außer dem Kontaktformular (es meldet dann „gerade nicht erreichbar“). Ohne Demo-Adresse wird der Rechner-Abschnitt ausgeblendet.
 
 ---
 

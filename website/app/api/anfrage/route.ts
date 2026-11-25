@@ -23,14 +23,18 @@ export async function POST(request: Request) {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     console.error("Supabase-Zugangsdaten fehlen (.env.local prüfen).");
     return NextResponse.json(
-      { fehler: "Das Formular ist gerade nicht verfügbar. Bitte schreiben Sie uns direkt eine E-Mail." },
+      { fehler: "Das Formular ist gerade nicht erreichbar. Bitte versuch es später noch einmal." },
       { status: 503 },
     );
   }
 
+  // Die Seite schickt FormData (system.js des Taste-Baukastens), ältere Clients JSON.
   let body: Record<string, unknown>;
   try {
-    body = await request.json();
+    const typ = request.headers.get("content-type") ?? "";
+    body = typ.includes("application/json")
+      ? await request.json()
+      : Object.fromEntries((await request.formData()).entries());
   } catch {
     return NextResponse.json({ fehler: "Ungültige Anfrage." }, { status: 400 });
   }
@@ -39,14 +43,14 @@ export async function POST(request: Request) {
   const email = text(body.email, 150);
 
   if (!name || name.length < 2) {
-    return NextResponse.json({ fehler: "Bitte geben Sie Ihren Namen an." }, { status: 400 });
+    return NextResponse.json({ fehler: "Bitte gib deinen Namen an." }, { status: 400 });
   }
   if (!email || !/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) {
-    return NextResponse.json({ fehler: "Bitte geben Sie eine gültige E-Mail-Adresse an." }, { status: 400 });
+    return NextResponse.json({ fehler: "Bitte gib eine gültige E-Mail-Adresse an." }, { status: 400 });
   }
   if (!alsBool(body.einwilligung)) {
     return NextResponse.json(
-      { fehler: "Ohne Ihre Einwilligung dürfen wir die Anfrage nicht speichern." },
+      { fehler: "Ohne deine Einwilligung dürfen wir die Anfrage nicht speichern." },
       { status: 400 },
     );
   }
@@ -86,14 +90,14 @@ export async function POST(request: Request) {
     if (!res.ok) {
       console.error("Supabase-Fehler:", res.status, await res.text());
       return NextResponse.json(
-        { fehler: "Speichern fehlgeschlagen. Bitte versuchen Sie es später erneut." },
+        { fehler: "Speichern hat nicht geklappt. Bitte versuch es später noch einmal." },
         { status: 502 },
       );
     }
   } catch (err) {
     console.error("Netzwerkfehler zu Supabase:", err);
     return NextResponse.json(
-      { fehler: "Verbindung fehlgeschlagen. Bitte versuchen Sie es später erneut." },
+      { fehler: "Keine Verbindung zum Server. Bitte versuch es später noch einmal." },
       { status: 502 },
     );
   }
