@@ -11,3 +11,6 @@ website/node_modules/
 website/.next/
 .agents/
 *.log
+
+# Skill-Verknüpfungen (absolute Links nach .agents/); welche Skills installiert sind, steht in skills-lock.json
+.claude/skills/

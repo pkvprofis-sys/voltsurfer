@@ -36,10 +36,10 @@ class BatteryConfig:
 
 BATTERY_PRESETS: dict[str, BatteryConfig] = {
     "VoltSurfer 20 (20 kWh / 11 kW)": BatteryConfig(
-        capacity_kwh=20.0, charge_power_kw=11.0, discharge_power_kw=11.0, price_eur=8000.0
+        capacity_kwh=20.0, charge_power_kw=11.0, discharge_power_kw=11.0, price_eur=9000.0
     ),
     "VoltSurfer 30 (30 kWh / 11 kW)": BatteryConfig(
-        capacity_kwh=30.0, charge_power_kw=11.0, discharge_power_kw=11.0, price_eur=11000.0
+        capacity_kwh=30.0, charge_power_kw=11.0, discharge_power_kw=11.0, price_eur=12000.0
     ),
 }
 

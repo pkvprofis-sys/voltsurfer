@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="de" data-type="software" data-radius="soft" data-buttons="tonal" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VoltSurfer: Batteriespeicher mit Börsensteuerung für Eigenheime</title>
+<meta name="description" content="Der Speicher lädt in den billigsten Stunden des Tages und versorgt dein Haus am teuren Abend. Zwei Größen ab 9.000 €, auf Wunsch mit der VoltSurfer KI.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VoltSurfer: Batteriespeicher mit Börsensteuerung">
+<meta property="og:description" content="Lädt im Preistal, versorgt dein Haus am teuren Abend. Zwei Größen ab 9.000 €, auf Wunsch mit KI.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0c0e0a">
+<!-- <link rel="canonical" href="https://[Domain von VoltSurfer]/"> sobald die Domain feststeht -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<!-- Schriften selbst ausgeliefert (DSGVO): Instrument Sans, Instrument Serif kursiv, DM Mono -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #0c0e0a; --p-surface: #151912; --p-ink: #eef1e7; --p-muted: #9ca392;
+  --p-accent: #c6ef62; --p-accent-ink: #0c0e0a; --p-action: #c6ef62; --p-action-ink: #0c0e0a;
+  --p-inv-bg: #eef1e7; --p-inv-surface: #dcdfd5; --p-inv-ink: #0c0e0a; --p-inv-muted: #575953;
+  --p-inv-accent: #0c0e0a; --p-inv-accent-ink: #eef1e7; --p-inv-action: #0c0e0a; --p-inv-action-ink: #eef1e7;
+  --font-display: "Instrument Sans", system-ui, sans-serif;
+  --font-text: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.028em;
+  --display-tracking-xl: -0.036em;
+  --display-stretch: 96%;
+  --ly-scale: 1.04;
+}
+</style>
+<link rel="stylesheet" href="assets/ui/base.css">
+<link rel="stylesheet" href="assets/ui/window/fragment.css">
+<link rel="stylesheet" href="assets/ui/stat/fragment.css">
+<link rel="stylesheet" href="assets/ui/toggles/fragment.css">
+<link rel="stylesheet" href="assets/ui/notify/fragment.css">
+<link rel="stylesheet" href="assets/ui/checklist/fragment.css">
+<link rel="stylesheet" href="assets/diagrams/diagram.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/iris-opens/moment.js">
+<link rel="modulepreload" href="assets/moments/counter-rolls/moment.js">
+<!-- Seiten-CSS: nur was in einem Bild sitzt, plus die kursive Zeile aus dem Vorbild des Kunden -->
+<style>
+  /* die eine kursive Serifen-Zeile im h1, in der Akzentfarbe (Vorbild des Kunden) */
+  .h1-serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--accent); }
+  /* der Knoten im ersten Bildschirm: Wirkung und Diagramm füllen den Rahmen, ohne eigene Fläche */
+  /* die Strichzeichnung im ersten Bildschirm: kein Kasten, die Lichtstrahlen laufen weich in den Grund aus */
+  .hero--split .hero__media.hero__media--il { background: transparent; border-radius: 0; overflow: visible; }
+  .hero__media--il > .fx-canvas { -webkit-mask-image: radial-gradient(closest-side at 55% 50%, #000 35%, transparent 100%); mask-image: radial-gradient(closest-side at 55% 50%, #000 35%, transparent 100%); }
+  .il { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  /* ab 1024: die Zeichnung nutzt auch die Lücke zur Textspalte, damit die Szene groß genug wirkt */
+  @media (min-width: 1024px) { .hero__media--il .il { left: -112px; width: calc(100% + 112px); max-width: none; } }
+  .il path, .il rect, .il circle { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .il .il-soft, .il .il-soft > * { stroke: color-mix(in oklab, var(--accent) 50%, transparent); }
+  .il .il-faint, .il .il-faint * { stroke: color-mix(in oklab, var(--accent) 24%, transparent); }
+  .il .il-fill { fill: var(--bg); }
+  .il .il-bold { stroke-width: 2.2; }
+  .il .il-panel { stroke-width: 3.2; }
+  .il .il-solid { fill: var(--accent); stroke: none; }
+  .il .il-window { fill: color-mix(in oklab, var(--accent) 12%, transparent); stroke: var(--accent); }
+  .il .il-dash { stroke-dasharray: 2 8; animation: il-dash 1.4s linear infinite; }
+  .il .il-hero { filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 55%, transparent)); }
+  .il .il-pulse { fill: #f2ffd0; stroke: none; filter: drop-shadow(0 0 6px var(--accent)); }
+  .il .il-blink { animation: il-blink 2.4s ease-in-out infinite; }
+  .il .il-led { stroke: var(--accent); stroke-width: 3; filter: drop-shadow(0 0 4px var(--accent)); }
+  .il .il-hero { animation: il-breathe 3.6s ease-in-out infinite; }
+  .il .il-motes circle { fill: var(--accent); stroke: none; opacity: .5; animation: il-twinkle 3.8s ease-in-out infinite; }
+  .il .il-pulse--tail { filter: none; }
+  @keyframes il-breathe { 50% { filter: drop-shadow(0 0 16px color-mix(in oklab, var(--accent) 75%, transparent)); } }
+  @keyframes il-twinkle { 0%, 100% { opacity: .12; } 50% { opacity: .7; } }
+  /* Faktenleiste am Fuß der Textspalte, wie die Logozeile im Vorbild, aber mit eigenen Fakten */
+  .hero--split .hero__text { display: flex; flex-direction: column; align-self: stretch; }
+  .hero__text > .hero-facts { margin-top: auto; padding-top: var(--s-5); border-top: 1px solid var(--line); }
+  .il .il-chip rect { fill: color-mix(in oklab, var(--surface) 92%, transparent); stroke: color-mix(in oklab, var(--accent) 35%, transparent); stroke-width: 1; }
+  .il .il-chip text { fill: var(--ink); font: 500 19px var(--font-text); }
+  .il .il-chip .il-mono { fill: var(--accent); font-family: var(--font-mono); }
+  @keyframes il-dash { to { stroke-dashoffset: -20; } }
+  /* Preise: die Steuerung als zweite Reihe unter den drei Größen */
+  #pricing .plan-steuerung { margin-top: var(--s-8); }
+  /* zwei Kartenreihen passen nicht in einen Bildschirm, zwei Bildschirme ließen eine Lücke: der Abschnitt wächst mit */
+  @media (min-width: 1280px) { #pricing { height: auto; min-height: 100vh; min-height: 100svh; } }
+  /* Preisuhr (preisuhr.js): der Balken der gezeigten Stunde leuchtet, nicht der letzte */
+  .ui-stat[data-uhr] .ui-stat__bars rect:last-child { fill: var(--u-fill-3); }
+  .ui-stat[data-uhr] .ui-stat__bars rect.is-now { fill: var(--u-accent); }
+  @keyframes il-blink { 50% { opacity: .35; } }
+  @media (max-width: 639px) { .il .il-chip { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .il .il-dash, .il .il-blink, .il .il-hero, .il .il-motes circle { animation: none; } .il .il-pulses { display: none; } }
+  /* app-frame (sections-library.md, app-frame) */
+  .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+  .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+  .app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+  .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+  @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+  @media (max-width: 1023px) {
+    .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .app > .app__pane--list { max-height: 252px; }
+    .app > .app__pane--list::after { display: none; }
+    .app .ui-win__side { display: none; }
+    .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+    .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+  }
+  @media (max-width: 639px) {
+    .app.ui { grid-template-rows: minmax(0, 1fr); }
+    .app > .app__pane--list { display: none; }
+    .app > .app__pane + .app__pane { border-top: 0; }
+  }
+  /* die Karten der Steuerung */
+  #steuerung .panel { --p-h: 336px; }
+  /* der Ablauf steht auf dem dunklen Seitengrund, nicht auf dem hellen UI-Grund: so bleiben seine Beschriftungen lesbar */
+  #contact-form .dg--steps { height: 240px; }
+  /* die Größenwahl im Formular: drei Knöpfe in einer Zeile */
+  .choices { display: grid; gap: var(--s-2); border: 0; margin: 0; padding: 0; }
+  /* der Name im Abschluss: Instrument Sans braucht mehr Höhe als .86, sonst schneidet die Oberlänge ab */
+  /* der Schriftzug im Footer: etwa halb so groß wie im Baukasten, damit er nicht über die Seite drückt */
+  .close__word { line-height: 1.04; font-size: clamp(48px, 7.2vw, 104px); }
+  .choices legend { width: 100%; margin-bottom: var(--s-2); font-size: var(--t-small); font-weight: 500; }
+  .choice { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 44px; border-bottom: 1px solid var(--line); font-size: var(--t-body); cursor: pointer; }
+  .choice:has(input:checked) > span { color: var(--accent); }
+  .choice input, .consent input { accent-color: var(--action); width: 18px; height: 18px; margin: 0; }
+  .consent { display: grid; grid-template-columns: 18px 1fr; gap: var(--s-3); align-items: start; font-size: var(--t-small); font-weight: 400; color: var(--ink); }
+  .consent a { text-decoration: underline; text-underline-offset: 3px; }
+  /* die Aufteilung "ab dem ersten Tag" und "mit VPP" als ein Balken */
+  .split-bar { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--line); }
+  .split-bar > span:first-child { flex: 0 0 57%; background: var(--accent); }
+  .split-bar > span:last-child { flex: 1 1 auto; background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 55%, transparent) 0 6px, transparent 6px 11px); }
+  .split-legend { display: flex; justify-content: space-between; gap: var(--s-4); font-size: var(--t-small); }
+  .footnote { font-size: var(--t-label); color: var(--muted); max-width: 110ch; }
+  /* Rechner: Eingaben links, Ergebnis rechts (ein Bild aus der Simulation) */
+  .calc-form { display: grid; gap: var(--s-4); }
+  .calc-seg { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .calc-seg legend { font-size: var(--t-small); font-weight: 500; margin-bottom: var(--s-2); }
+  .calc-seg__row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-2); }
+  .calc-seg__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calc-seg label { position: relative; }
+  .calc-seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .calc-seg span { display: grid; place-items: center; min-height: 44px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); font-size: var(--t-body); transition: border-color .2s, background-color .2s, color .2s; }
+  .calc-seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
+  .calc-seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .calc-switch { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 44px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .calc-switch input { appearance: none; width: 44px; height: 26px; border-radius: 999px; background: var(--line-strong); position: relative; cursor: pointer; transition: background-color .2s; flex: none; margin: 0; }
+  .calc-switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); transition: transform .2s; }
+  .calc-switch input:checked { background: var(--accent); }
+  .calc-switch input:checked::after { transform: translateX(18px); background: var(--accent-ink); }
+  .calc-switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .calc-out { padding: var(--s-6); display: grid; gap: var(--s-5); align-content: start; }
+  .calc-out__nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
+  .calc-out__label { font-size: var(--t-small); color: var(--u-muted, var(--muted)); }
+  .calc-out__big { font: var(--display-weight) var(--t-h2)/1.05 var(--font-display); letter-spacing: var(--display-tracking); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .calc-out__mid { font: var(--display-weight) var(--t-stat)/1.1 var(--font-display); font-variant-numeric: tabular-nums; margin-top: var(--s-2); }
+  .calc-out__meta { font-size: var(--t-small); color: var(--u-muted, var(--muted)); }
+  .calc-chart { display: grid; gap: var(--s-2); }
+  .calc-chart__bars { height: 220px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; align-items: end; border-bottom: 1px solid var(--u-line, var(--line)); }
+  .calc-bar { display: flex; flex-direction: column-reverse; height: 100%; }
+  .calc-bar > i { display: block; border-radius: 3px 3px 0 0; transition: height .5s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * 45ms); }
+  .calc-bar > i:first-child { background: var(--accent); border-radius: 0; }
+  .calc-bar > i:last-child { background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 50%, transparent) 0 5px, transparent 5px 9px); }
+  .calc-chart__axis { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; font-size: var(--t-label); color: var(--u-muted, var(--muted)); text-align: center; }
+  .calc-legend { display: flex; flex-wrap: wrap; gap: var(--s-5); font-size: var(--t-small); }
+  .calc-legend span { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .calc-key { width: 14px; height: 14px; border-radius: 3px; background: var(--accent); }
+  .calc-key--plus { background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 50%, transparent) 0 4px, transparent 4px 7px); outline: 1px solid color-mix(in oklab, var(--accent) 50%, transparent); }
+  @media (max-width: 639px) { .calc-out { padding: var(--s-5); } .calc-chart__bars { height: 160px; gap: 3px; } .calc-chart__axis { gap: 3px; font-size: 11px; } .calc-out__nums { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .calc-bar > i { transition: none; } }
+  /* Tablet: Auswahl und Ergebnis nebeneinander, damit der Rechner auf einen Bildschirm passt */
+  @media (min-width: 640px) and (max-width: 1023px) { #rechner .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } #rechner .grid > * { grid-column: auto; } #rechner .calc-out { padding: var(--s-5); } #rechner .calc-out__nums { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 1279px) { .calc-chart__bars { height: 170px; } }
+  @media (min-width: 640px) and (max-width: 1023px) { #rechner .calc-chart__bars { height: 280px; } }
+  /* 1024 bis 1279: die Antworten bekommen mehr Breite, damit die Fragen auf einen Bildschirm passen */
+  @media (min-width: 1024px) and (max-width: 1279px) { #faq .grid > .span-5 { grid-column: 1 / span 4; } #faq .faq { grid-column: 5 / -1; } }
+  /* die vier Zahlen als 2 x 2, so groß wie die Abschnittsüberschrift */
+  #ersparnis .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--s-8); }
+  #ersparnis .stats .t-stat { font-size: var(--t-h2); }
+</style>
+</head>
+<body>
+<!-- type: software (VoltSurfer verkauft einen Batteriespeicher, dessen Kern die Börsensteuerung ist)
+     deal: hero split (vom Kunden vorgegeben: Knoten mit Leitungen rechts, Vorbild-Bild), nav-centre (aus nav-cards neu gewürfelt: keine Fotos; deckt sich mit dem Vorbild),
+     close close-word, footer footer-columns, rhythm surface-pairs, buttons tonal, mark arc, grounds: keine CSS-Gründe
+     palette: Farben des Kunden-Vorbilds (start.mjs brand: fast Schwarz #0c0e0a, Limette #c6ef62), type instrument + Instrument Serif kursiv (Vorbild)
+     effect: god-rays im Bildrahmen des ersten Bildschirms
+     moments: iris-opens (#markt), counter-rolls (#ersparnis) -->
+
+<header class="nav nav--centre">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Zum Inhalt</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="arc" aria-hidden="true"></span>VoltSurfer</a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <div class="nav__item">
+        <a class="nav__link" href="#steuerung">Steuerung <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <div class="menu-col span-3">
+              <p class="t-label">So arbeitet der Speicher</p>
+              <a href="#plan">Plan ansehen<span>Der Fahrplan für morgen</span></a>
+              <a href="#markt">Strompreise<span>Wo das Preistal liegt</span></a>
+              <a href="#ersparnis">Ein Jahr gerechnet<span>Was es gebracht hätte</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#markt">Strompreise</a></div>
+      <div class="nav__item"><a class="nav__link" href="#rechner">Rechner</a></div>
+      <div class="nav__item"><a class="nav__link" href="#pricing">Preise</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">Fragen</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="#contact-form">Beratung anfragen</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menü">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1 · Erster Bildschirm: split, rechts der Knoten aus Börse, Netz, Haus und Geräten -->
+  <section class="hero hero--split" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Für Eigenheime, mit oder ohne Solaranlage</p>
+        <h1 id="hero-h">Heimspeicher, der <span class="h1-serif">zu Börsenpreisen</span> lädt</h1>
+        <p class="hero__lead">An Sommertagen kostet Strom an der Börse mittags im Schnitt 1&nbsp;Cent, abends 18. VoltSurfer lädt im Preistal und versorgt dein Haus, wenn es teuer wird.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="#contact-form">Beratung anfragen<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+          <a class="btn btn--secondary" href="#plan">Plan ansehen</a>
+        </div>
+        <dl class="hero-facts">
+          <div><dt>Laden und Entladen</dt><dd>11&nbsp;kW</dd></div>
+          <div><dt>LFP-Zellen</dt><dd>6.000 Ladezyklen</dd></div>
+          <div><dt>Preis</dt><dd>ab 9.000&nbsp;€</dd></div>
+        </dl>
+      </div>
+      <div class="hero__media hero__media--il span-6 start-7" data-fx="god-rays" data-fx-seed="11" data-fx-params='{"originX":0.62,"originY":-0.3,"tilt":-12,"spread":48,"density":0.3,"intensity":0.55}'>
+        <!-- Strichzeichnung der Anlage (vom Kunden gewünscht): Strommast, aufgeschnittenes Haus mit dem VoltSurfer-Speicher
+             im Technikraum, Wärmepumpe, Carport mit E-Auto an der Wallbox; jeder Stromfluss hat eine eigene Leitung -->
+        <svg class="il" viewBox="0 120 922 430" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Strichzeichnung: ein Strommast, ein modernes Haus mit Solarmodulen, im Haus der VoltSurfer-Speicher, draußen eine Wärmepumpe und unter einem Carport ein E-Auto an der Wallbox; getrennte Leitungen mit Lichtpunkten zeigen, wie Strom aus Netz und Solar in den Speicher und vom Speicher zu Haus, Wärmepumpe und Auto fließt">
+          <!-- Leuchtpartikel -->
+          <g class="il-motes">
+            <circle cx="420" cy="152" r="1.3"/><circle cx="470" cy="214" r="1" style="animation-delay:-1.1s"/><circle cx="522" cy="170" r="1.5" style="animation-delay:-2.3s"/>
+            <circle cx="604" cy="138" r="1.1" style="animation-delay:-.6s"/><circle cx="662" cy="204" r="1.4" style="animation-delay:-3s"/><circle cx="722" cy="158" r="1" style="animation-delay:-1.8s"/>
+            <circle cx="784" cy="232" r="1.3" style="animation-delay:-2.7s"/><circle cx="826" cy="176" r="1" style="animation-delay:-.3s"/><circle cx="452" cy="262" r="1.2" style="animation-delay:-1.5s"/>
+            <circle cx="362" cy="232" r="1" style="animation-delay:-2s"/><circle cx="250" cy="244" r="1.3" style="animation-delay:-.9s"/><circle cx="702" cy="266" r="1.1" style="animation-delay:-3.4s"/>
+            <circle cx="540" cy="244" r="1" style="animation-delay:-2.5s"/><circle cx="304" cy="290" r="1.2" style="animation-delay:-.2s"/>
+          </g>
+          <!-- Boden -->
+          <path class="il-faint" d="M0 520H922"/>
+          <!-- Strommast, etwas zurückgenommen wie in der Ferne -->
+          <g class="il-soft">
+            <path d="M50 520L63 260L67 236L70 226L73 236L77 260L90 520"/>
+            <path d="M51 500L87 460M89 500L53 460M53 460L85 420M87 460L55 420M55 420L83 380M85 420L57 380M57 380L81 340M83 380L59 340M59 340L79 300M81 340L61 300M61 300L77 260M79 300L63 260"/>
+            <path d="M36 262H104M48 240H92M40 262v10M100 262v10M52 240v8M88 240v8"/>
+            <path d="M40 272Q20 290 0 284M52 248Q26 262 0 258"/>
+          </g>
+          <!-- Wärmepumpe, draußen neben dem Haus -->
+          <rect class="il-fill il-line" x="190" y="476" width="58" height="44" rx="4"/>
+          <circle class="il-line" cx="213" cy="498" r="14"/>
+          <circle class="il-soft" cx="213" cy="498" r="9"/><circle class="il-soft" cx="213" cy="498" r="3.5"/>
+          <path class="il-soft" d="M236 484v28M240 484v28M244 484v28"/>
+          <!-- Haus, aufgeschnitten: links der Wohnteil mit zwei Geschossen, rechts der Technikraum mit Solardach -->
+          <path class="il-fill" d="M272 520V336H440V404H590V520Z"/>
+          <path class="il-line" d="M266 336H446M272 336V520M440 336V404M434 404H596M590 404V520"/>
+          <path class="il-faint" d="M272 428H440M440 404V520"/>
+          <path class="il-window" d="M292 352h128v52h-128z"/>
+          <path class="il-soft" d="M356 352v52"/>
+          <path class="il-line" d="M292 520v-64h26v64"/>
+          <!-- Stehlampe im Wohnraum: hier kommt der Strom für das Haus an -->
+          <path class="il-soft" d="M404 520V474M396 520h16"/>
+          <path class="il-fill il-line" d="M394 474h20l-4-12h-12z"/>
+          <circle class="il-solid il-blink" cx="404" cy="478" r="2"/>
+          <!-- Solarmodule auf dem Technikraum -->
+          <path class="il-panel" d="M450 400l28-15M490 400l28-15M530 400l28-15"/>
+          <path class="il-soft" d="M472 388.5V404M512 388.5V404M552 388.5V404"/>
+          <!-- Leitungen, jede für sich: Netz und Solar in den Speicher; Haus, Wärmepumpe und Auto aus dem Speicher -->
+          <path class="il-soft" d="M100 272Q190 340 272 360"/>
+          <path class="il-line il-dash" d="M100 272Q190 340 272 360"/>
+          <circle class="il-solid" cx="272" cy="360" r="2.4"/>
+          <path class="il-soft il-dash" d="M272 360H282V446H522"/>
+          <path class="il-soft il-dash" d="M540 395V432"/>
+          <path class="il-soft il-dash" d="M522 500H404V478"/>
+          <path class="il-soft il-dash" d="M540 520V536H219V520"/>
+          <path class="il-soft" d="M558 466H660"/>
+          <!-- VoltSurfer-Speicher im Technikraum -->
+          <g class="il-hero">
+            <rect class="il-fill" x="522" y="432" width="36" height="88" rx="8"/>
+            <rect class="il-line il-bold" x="522" y="432" width="36" height="88" rx="8"/>
+            <rect class="il-soft" x="528" y="439" width="24" height="74" rx="5"/>
+            <path class="il-solid" transform="translate(534 445) scale(.5)" d="M2.5 21.5V12a9.5 9.5 0 0 1 19 0v9.5h-6V12a3.5 3.5 0 0 0-7 0v9.5z"/>
+            <path class="il-soft" d="M540 466V502"/>
+            <path class="il-led" d="M540 502V476"/>
+            <circle class="il-solid il-blink" cx="540" cy="508" r="1.8"/>
+          </g>
+          <!-- Carport mit Flachdach, Wallbox am linken Pfosten -->
+          <rect class="il-fill il-line" x="640" y="410" width="282" height="8" rx="1"/>
+          <path class="il-faint" d="M646 422H916"/>
+          <rect class="il-fill il-soft" x="652" y="418" width="6" height="102"/>
+          <rect class="il-fill il-soft" x="906" y="418" width="6" height="102"/>
+          <rect class="il-fill il-line" x="660" y="448" width="16" height="30" rx="3"/>
+          <circle class="il-solid il-blink" cx="668" cy="457" r="1.8"/>
+          <path class="il-line il-dash" d="M668 478C668 498 694 500 701 482.5"/>
+          <!-- E-Auto: Tesla-Limousine nach der Strichzeichnung des Kunden, von Hand nachgezogen und gespiegelt,
+               ohne Markenzeichen; Ladekabel an der Rückleuchte -->
+          <path class="il-fill il-line" d="M897.3 509.6C896.7 506.6 895.9 502.7 895.7 498.1C895.5 494.2 895.3 491.6 894.1 489.6C892.5 487 888.9 485.1 882.3 483.1C871.9 480.1 853.7 477 836.7 473.6C827.6 469.4 817.1 463.9 806.7 460.3C796.3 456.6 783.2 455.1 771.5 454.9C754.5 454.9 738.9 457.7 725.8 462.9C714.1 467.5 702.3 471 690.3 472C691.9 473.3 693.5 474.4 693.9 475.3C691.3 479.9 689 486.4 688.5 492.9C688 498.1 688.7 503.3 690.3 506.6C694.5 509.2 702.3 510.5 709.5 511.8L710.6 512.4A19.6 19.6 0 1 1 745 512.4H845.6A19.6 19.6 0 1 1 879.4 512.4C890 512.4 896 511.5 897.3 509.6Z"/>
+          <path class="il-window" d="M812.6 475.3C809.3 469.4 801.5 463.6 791 460.6C787.1 459.6 783.9 459.1 780.3 458.9L783.5 473.6ZM774.7 458.7C765 458.6 754.5 459.3 748.3 460.3L743.8 470.1C754.5 471 766.3 472.3 778 473.3ZM746 460.8C739.5 462.3 734.7 464.5 731.7 466.8C734.7 468.1 738.2 469.2 741.5 469.8Z"/>
+          <path class="il-fill il-line" d="M783.5 473.6L780.3 458.9L774.7 458.7L778 473.3Z"/>
+          <path class="il-fill il-soft" d="M825 475.7C824.7 472.7 822.3 470.1 817.8 469.7C815.2 469.7 813.5 471 813 473.3C813.2 474.6 817.1 475.3 825 475.7Z"/>
+          <path class="il-soft" d="M830.2 476.2C832 482.5 832.8 495.5 832.1 505.3M782.6 474L782.2 507.3M733.4 473.1C736.3 482.5 740.2 491.6 748 499.4C751.9 503.3 754.5 505.9 755.8 507.3M832.1 505.3L755.8 507"/>
+          <path class="il-faint" d="M841.9 509.6L746.7 509.9M733.7 473.3C723.2 472.8 712.8 472.6 702.3 473.3M848.4 484C845.8 484.8 843.2 485.7 840.6 486.4M894.7 501.4C892.1 502.3 888.9 502.7 886.5 502.3M699.7 491.6C695.8 491.3 691.9 491.1 688.7 490.6"/>
+          <path class="il-line il-bold" d="M796.9 480.1L786.9 479.2M750 477.5L740.4 476.7"/>
+          <path class="il-solid" d="M893.4 486.6C889.5 484.8 883.7 484 877.8 484C879.7 485.7 883.7 487 888.2 487.7C890.2 487.7 892.1 487.4 893.4 486.6ZM704.7 478.3C702.3 476.2 698.4 475.3 693.9 475.4L693.2 479.9C697.1 480.1 701 479.9 704.7 478.3Z"/>
+          <circle class="il-solid" cx="701" cy="482.5" r="1.6"/>
+          <circle class="il-fill il-line il-bold" cx="727.8" cy="503" r="17"/><circle class="il-soft" cx="727.8" cy="503" r="13.7"/><circle class="il-soft" cx="727.8" cy="503" r="3.4"/>
+          <path class="il-soft" d="M727.2 499.2L726.7 490.4M728.4 499.2L728.9 490.4M731.2 501.3L739.4 498.1M731.6 502.4L740.1 500.2M730.5 505.7L736.1 512.5M729.5 506.4L734.3 513.8M726.1 506.4L721.3 513.8M725.1 505.7L719.5 512.5M724 502.4L715.5 500.2M724.4 501.3L716.2 498.1"/>
+          <circle class="il-fill il-line il-bold" cx="862.5" cy="503" r="17"/><circle class="il-soft" cx="862.5" cy="503" r="13.7"/><circle class="il-soft" cx="862.5" cy="503" r="3.4"/>
+          <path class="il-soft" d="M861.9 499.2L861.4 490.4M863.1 499.2L863.6 490.4M865.9 501.3L874.1 498.1M866.3 502.4L874.8 500.2M865.2 505.7L870.8 512.5M864.2 506.4L869 513.8M860.8 506.4L856 513.8M859.8 505.7L854.2 512.5M858.7 502.4L850.2 500.2M859.1 501.3L850.9 498.1"/>
+          <!-- Lichtpunkte, je Leitung eigene: Netz und Solar laden, der Speicher versorgt Haus, Wärmepumpe und Auto -->
+          <g class="il-pulses">
+            <circle class="il-pulse" r="3.4"><animateMotion dur="4s" begin="0s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.55"><animateMotion dur="4s" begin="0.09s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.25"><animateMotion dur="4s" begin="0.18s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle>
+            <circle class="il-pulse" r="3.4"><animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.55"><animateMotion dur="4s" begin="2.09s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.25"><animateMotion dur="4s" begin="2.18s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="1.6s" begin="0.6s" repeatCount="indefinite" path="M540 395V432"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="1.6s" begin="0.69s" repeatCount="indefinite" path="M540 395V432"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="1.6s" begin="0.78s" repeatCount="indefinite" path="M540 395V432"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="2.4s" begin="1s" repeatCount="indefinite" path="M522 500H404V478"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="2.4s" begin="1.09s" repeatCount="indefinite" path="M522 500H404V478"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="2.4s" begin="1.18s" repeatCount="indefinite" path="M522 500H404V478"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="3.2s" begin="1.2s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="3.2s" begin="1.29s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="3.2s" begin="1.38s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="2.6s" begin="0.3s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="2.6s" begin="0.39s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="2.6s" begin="0.48s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle>
+          </g>
+          <!-- Hinweisfelder -->
+          <g class="il-chip">
+            <path class="il-soft" d="M70 226C70 190 96 169 120 169"/>
+            <circle class="il-solid" cx="120" cy="169" r="3"/>
+            <rect x="126" y="146" width="262" height="46" rx="12"/>
+            <text x="144" y="175"><tspan class="il-mono">13:00</tspan> Preise für morgen</text>
+          </g>
+          <g class="il-chip">
+            <path class="il-soft" d="M640 346C640 374 604 385 562 385"/>
+            <circle class="il-solid" cx="562" cy="385" r="3"/>
+            <rect x="600" y="300" width="292" height="46" rx="12"/>
+            <text x="618" y="329">Laden 10–16 Uhr <tspan class="il-mono">Ø 2,7 ct</tspan></text>
+          </g>
+        </svg>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 2 · app-frame: die Steuerung selbst, Fahrplan links, Börsenpreis je Stunde rechts (Ø Sommertag, echte Daten) -->
+  <section class="section" id="plan" aria-labelledby="plan-h">
+    <div class="wrap">
+      <div class="grid">
+        <h2 id="plan-h" class="span-5">Der Plan für morgen, jeden Mittag neu</h2>
+        <div class="span-6 start-7 stack-4">
+          <p>Um 13 Uhr stehen die Börsenpreise für jede Viertelstunde von morgen fest. VoltSurfer plant daraus, wann dein Speicher lädt und wann er das Haus versorgt.</p>
+          <a class="link" href="#ersparnis">Ein Jahr gerechnet</a>
+        </div>
+      </div>
+      <div class="ui app fill" role="img" aria-label="Die VoltSurfer-Steuerung: links der Fahrplan für morgen mit Speicher, Wärmepumpe, E-Auto und Haus, rechts der Börsenpreis je Stunde eines durchschnittlichen Sommertags mit dem Tiefstpreis von 1,0 Cent um 13 Uhr" data-ui-pause-host>
+        <div class="app__pane app__pane--list">
+          <div class="ui ui-panel ui-win" data-ui="window" data-open="Geplant" data-work="Läuft" data-done="Erledigt">
+            <div class="ui-win__bar">
+              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="ui-win__crumb"><svg class="ui-brand" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><path d="M2.5 21.5V12a9.5 9.5 0 0 1 19 0v9.5h-6V12a3.5 3.5 0 0 0-7 0v9.5z"/></svg>VoltSurfer <i>/</i> <b>Morgen</b></span>
+              <span class="ui-spacer"></span>
+              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">Suchen</span><span class="ui-kbd">/</span></span>
+            </div>
+            <div class="ui-win__body">
+              <nav class="ui-win__side" aria-hidden="true">
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>Heute<em>9</em></span>
+                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M2.5 9h3l1 1.5h3l1-1.5h3"/><path d="M2.5 9 4 3.5h8L13.5 9v3.5h-11z"/></svg>Morgen<em>11</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg>Erledigt</span>
+                <span class="ui-win__label">Ansichten</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Preise</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>Geräte</span>
+              </nav>
+              <div class="ui-win__main">
+                <div class="ui-win__cols" aria-hidden="true"><span>Gerät</span><span>Plan</span><span>Status</span><span>Zeit</span></div>
+                <ul class="ui-win__rows">
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">SP</span><span class="ui-win__who">Speicher</span><span class="ui-win__sub">Laden im Preistal · Ø 2,7 ct</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">10:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">EA</span><span class="ui-win__who">E-Auto</span><span class="ui-win__sub">Laden bis 80 %</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">11:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">WP</span><span class="ui-win__who">Wärmepumpe</span><span class="ui-win__sub">Warmwasser aufheizen</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">12:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">HA</span><span class="ui-win__who">Haus</span><span class="ui-win__sub">Strom aus dem Speicher</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">17:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">NZ</span><span class="ui-win__who">Stromnetz</span><span class="ui-win__sub">Kein Bezug bis 22 Uhr</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">17:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="1">SP</span><span class="ui-win__who">Speicher</span><span class="ui-win__sub">20 % Reserve für den Morgen</span><span class="ui-win__st" data-st>Geplant</span><span class="ui-win__age">22:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="3">PL</span><span class="ui-win__who">Plan</span><span class="ui-win__sub">96 Viertelstunden geplant</span><span class="ui-win__st is-done" data-st>Erledigt</span><span class="ui-win__age">13:04</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="4">BÖ</span><span class="ui-win__who">Strombörse</span><span class="ui-win__sub">Preise für morgen geladen</span><span class="ui-win__st is-done" data-st>Erledigt</span><span class="ui-win__age">13:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="2">WE</span><span class="ui-win__who">Wetter</span><span class="ui-win__sub">Sonne und Temperatur geladen</span><span class="ui-win__st is-done" data-st>Erledigt</span><span class="ui-win__age">13:00</span></li>
+                  <li class="ui-win__row" data-row><span class="ui-avatar" data-tone="5">SO</span><span class="ui-win__who">Solaranlage</span><span class="ui-win__sub">Überschuss in den Speicher</span><span class="ui-win__st is-done" data-st>Erledigt</span><span class="ui-win__age">12:40</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app__pane app__pane--open" data-ui-loop>
+          <div class="ui ui-panel ui-stat" data-uhr data-ui="stat" data-values="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13" data-prev="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-ui-opts='{"fill":true}'>
+            <div class="ui-stat__head">
+              <div class="ui-stat__top">
+                <span class="ui-stat__label">Börsenpreis je Stunde, netto</span>
+                <span class="ui-stat__range">Ø Sommertag<svg class="ui-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 6.5 3.5 3.5 3.5-3.5"/></svg></span>
+              </div>
+              <div class="ui-stat__line">
+                <span class="ui-stat__num" data-stat-num>1,0 ct</span>
+                <span class="ui-chip ui-chip--plain ui-stat__delta">18,3 ct um 20 Uhr</span>
+                <span class="ui-stat__sub">Tiefstpreis um 13 Uhr</span>
+              </div>
+            </div>
+            <div class="ui-stat__chart">
+              <svg class="ui-stat__svg" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+                <path class="ui-stat__grid" d="M0 30.5H400M0 60.5H400M0 90.5H400"/>
+                <path class="ui-stat__cover" fill-rule="evenodd" d=""/>
+                <g class="ui-stat__bars"><rect rx="2" x="0.00" y="50.10" width="12.83" height="69.90"/><rect rx="2" x="16.83" y="54.08" width="12.83" height="65.92"/><rect rx="2" x="33.67" y="56.35" width="12.83" height="63.65"/><rect rx="2" x="50.50" y="56.92" width="12.83" height="63.08"/><rect rx="2" x="67.33" y="56.35" width="12.83" height="63.65"/><rect rx="2" x="84.17" y="54.08" width="12.83" height="65.92"/><rect rx="2" x="101.00" y="47.83" width="12.83" height="72.17"/><rect rx="2" x="117.83" y="47.83" width="12.83" height="72.17"/><rect rx="2" x="134.67" y="57.49" width="12.83" height="62.51"/><rect rx="2" x="151.50" y="72.83" width="12.83" height="47.17"/><rect rx="2" x="168.33" y="88.17" width="12.83" height="31.83"/><rect rx="2" x="185.17" y="98.97" width="12.83" height="21.03"/><rect rx="2" x="202.00" y="108.07" width="12.83" height="11.93"/><rect rx="2" x="218.83" y="114.32" width="12.83" height="5.68"/><rect rx="2" x="235.67" y="113.18" width="12.83" height="6.82"/><rect rx="2" x="252.50" y="104.66" width="12.83" height="15.34"/><rect rx="2" x="269.33" y="91.58" width="12.83" height="28.42"/><rect rx="2" x="286.17" y="71.69" width="12.83" height="48.31"/><rect rx="2" x="303.00" y="50.67" width="12.83" height="69.33"/><rect rx="2" x="319.83" y="27.93" width="12.83" height="92.07"/><rect rx="2" x="336.67" y="16.00" width="12.83" height="104.00"/><rect rx="2" x="353.50" y="23.39" width="12.83" height="96.61"/><rect rx="2" x="370.33" y="35.32" width="12.83" height="84.68"/><rect rx="2" x="387.17" y="46.12" width="12.83" height="73.88"/></g>
+              </svg>
+              <div class="ui-stat__axis" aria-hidden="true"><span>0 Uhr</span><span>12 Uhr</span><span>24 Uhr</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Moment iris-opens auf dem abgesetzten Grund: das Tal wandert in den Winter (Ø Wintertag, echte Daten) -->
+  <section class="section ground-surface" id="markt" aria-labelledby="markt-h" data-moment="iris-opens" data-moment-opts='{"from": "base"}'>
+    <div class="wrap">
+      <div class="grid">
+        <div class="span-5 stack-5">
+          <h2 id="markt-h">Die günstigste Stunde wandert. <span class="muted">Der Abend bleibt teuer.</span></h2>
+          <p class="t-lead">Im Sommerhalbjahr liegt der Tiefstpreis an 98&nbsp;% der Tage zwischen 10 und 16 Uhr. Von November bis Januar rutscht er in die Nacht. VoltSurfer plant deshalb nach dem Preis, nie nach der Uhr.</p>
+          <a class="link" href="#steuerung">Steuerung</a>
+        </div>
+        <div class="frame frame--split span-6 start-7">
+          <div class="stage stage--fade-br">
+            <div class="at-corner" style="--ax:56px;--ay:56px" data-ui-loop>
+              <div class="ui ui-panel ui-stat" data-uhr data-ui="stat" data-values="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-prev="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13">
+                <div class="ui-stat__head">
+                  <div class="ui-stat__top">
+                    <span class="ui-stat__label">Börsenpreis je Stunde, netto</span>
+                    <span class="ui-stat__range">Ø Wintertag<svg class="ui-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 6.5 3.5 3.5 3.5-3.5"/></svg></span>
+                  </div>
+                  <div class="ui-stat__line">
+                    <span class="ui-stat__num" data-stat-num>7,6 ct</span>
+                    <span class="ui-chip ui-chip--plain ui-stat__delta">13,7 ct um 17 Uhr</span>
+                    <span class="ui-stat__sub">Tiefstpreis um 3 Uhr nachts</span>
+                  </div>
+                </div>
+                <div class="ui-stat__chart">
+                  <svg class="ui-stat__svg" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="ui-stat__grid" d="M0 30.5H400M0 60.5H400M0 90.5H400"/>
+                    <path class="ui-stat__cover" fill-rule="evenodd" d=""/>
+                    <g class="ui-stat__bars"><rect rx="2" x="0.00" y="72.83" width="12.83" height="47.17"/><rect rx="2" x="16.83" y="74.54" width="12.83" height="45.46"/><rect rx="2" x="33.67" y="76.24" width="12.83" height="43.76"/><rect rx="2" x="50.50" y="76.81" width="12.83" height="43.19"/><rect rx="2" x="67.33" y="76.81" width="12.83" height="43.19"/><rect rx="2" x="84.17" y="74.54" width="12.83" height="45.46"/><rect rx="2" x="101.00" y="68.28" width="12.83" height="51.72"/><rect rx="2" x="117.83" y="58.05" width="12.83" height="61.95"/><rect rx="2" x="134.67" y="52.37" width="12.83" height="67.63"/><rect rx="2" x="151.50" y="55.21" width="12.83" height="64.79"/><rect rx="2" x="168.33" y="59.76" width="12.83" height="60.24"/><rect rx="2" x="185.17" y="62.03" width="12.83" height="57.97"/><rect rx="2" x="202.00" y="63.17" width="12.83" height="56.83"/><rect rx="2" x="218.83" y="62.03" width="12.83" height="57.97"/><rect rx="2" x="235.67" y="58.05" width="12.83" height="61.95"/><rect rx="2" x="252.50" y="51.23" width="12.83" height="68.77"/><rect rx="2" x="269.33" y="45.55" width="12.83" height="74.45"/><rect rx="2" x="286.17" y="42.14" width="12.83" height="77.86"/><rect rx="2" x="303.00" y="46.69" width="12.83" height="73.31"/><rect rx="2" x="319.83" y="52.94" width="12.83" height="67.06"/><rect rx="2" x="336.67" y="59.76" width="12.83" height="60.24"/><rect rx="2" x="353.50" y="64.31" width="12.83" height="55.69"/><rect rx="2" x="370.33" y="66.01" width="12.83" height="53.99"/><rect rx="2" x="387.17" y="71.13" width="12.83" height="48.87"/></g>
+                  </svg>
+                  <div class="ui-stat__axis" aria-hidden="true"><span>0 Uhr</span><span>12 Uhr</span><span>24 Uhr</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Aussage mit Moment counter-rolls: vier Zahlen aus Börsendaten und Simulation -->
+  <section class="section" id="ersparnis" aria-labelledby="ersparnis-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="ersparnis-h">Ein Jahr Börsenpreise, durchgerechnet. <span class="muted">Mit und ohne VPP.</span></h2>
+      </div>
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <p class="t-lead">Gerechnet für einen VoltSurfer 30 in einem Haus mit drei Personen und Wärmepumpe, gegen einen Festpreis von 35&nbsp;ct je Kilowattstunde.<sup>1</sup></p>
+          <p>Die 783&nbsp;€ entstehen ab dem Tag der Installation. Den Rest bringt das VoltSurfer-VPP, ein virtuelles Kraftwerk, sobald rund 20 bis 30 Speicher gemeinsam an der Börse verkaufen. Den gibt es noch nicht, deshalb rechnen wir dir beides getrennt vor.</p>
+          <div class="stack-3" role="img" aria-label="Von 1.370 Euro im Jahr entstehen 783 Euro ab dem ersten Tag, 587 Euro erst mit dem VPP">
+            <div class="split-bar"><span></span><span></span></div>
+            <div class="split-legend"><span>783 € ab dem ersten Tag</span><span class="muted">+ 587 € mit VPP</span></div>
+          </div>
+        </div>
+        <div class="span-6 start-7 stats" data-moment="counter-rolls">
+          <div><p class="t-stat">783 €</p><p class="t-small muted">im Jahr gespart, ab dem ersten Tag</p></div>
+          <div><p class="t-stat">1.370 €</p><p class="t-small muted">im Jahr, wenn das VPP mitverkauft</p></div>
+          <div><p class="t-stat">15,6 ct</p><p class="t-small muted">liegen im Schnitt zwischen billigster und teuerster Stunde</p></div>
+          <div><p class="t-stat">96 Tage</p><p class="t-small muted">mit Börsenpreisen unter null im letzten Jahr</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b · Rechner: Ersparnis je Haushalt, vorab mit der echten Simulation gerechnet (scripts/precompute_rechner.py → rechner.json) -->
+  <section class="section" id="rechner" style="--hm: 2" aria-labelledby="rechner-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-5">
+          <h2 id="rechner-h">Rechne dein Haus durch</h2>
+          <p class="t-lead">Gerechnet mit derselben Simulation wie oben: zwölf Monate echte Börsenpreise, gegen 35&nbsp;ct Festpreis.</p>
+          <form class="calc-form" id="calc" aria-label="Haushalt für den Rechner">
+            <fieldset class="calc-seg">
+              <legend>Personen im Haushalt</legend>
+              <div class="calc-seg__row">
+                <label><input type="radio" name="p" value="1"><span>1</span></label>
+                <label><input type="radio" name="p" value="2"><span>2</span></label>
+                <label><input type="radio" name="p" value="3" checked><span>3</span></label>
+                <label><input type="radio" name="p" value="4"><span>4</span></label>
+                <label><input type="radio" name="p" value="5"><span>5</span></label>
+              </div>
+            </fieldset>
+            <label class="calc-switch"><span>Solaranlage, 8&nbsp;kWp</span><input type="checkbox" name="pv" role="switch"></label>
+            <label class="calc-switch"><span>Wärmepumpe, 9&nbsp;kW</span><input type="checkbox" name="wp" role="switch" checked></label>
+            <label class="calc-switch"><span>E-Auto, 15.000&nbsp;km im Jahr</span><input type="checkbox" name="ea" role="switch"></label>
+            <fieldset class="calc-seg">
+              <legend>Speichergröße</legend>
+              <div class="calc-seg__row calc-seg__row--2">
+                <label><input type="radio" name="s" value="20"><span>VoltSurfer 20</span></label>
+                <label><input type="radio" name="s" value="30" checked><span>VoltSurfer 30</span></label>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="ui ui-panel calc-out span-6 start-7" aria-live="polite">
+          <div class="calc-out__nums">
+            <div><p class="calc-out__label">Gespart im Jahr, ab dem ersten Tag</p><p class="calc-out__big" data-calc="heute">783 €</p></div>
+            <div><p class="calc-out__label">Mit dem VoltSurfer-VPP</p><p class="calc-out__mid" data-calc="verbund">bis 1.370 €</p></div>
+          </div>
+          <p class="calc-out__meta" data-calc="meta">Strombedarf 7.686 kWh im Jahr · rechnet sich in etwa 15 Jahren, mit VPP in 9</p>
+          <div class="calc-chart" role="img" data-calc="chart" aria-label="Ersparnis je Monat von September bis August">
+            <div class="calc-chart__bars" data-calc="bars"><div class="calc-bar" style="--i:0"><i style="height:33.1%"></i><i style="height:42.1%"></i></div><div class="calc-bar" style="--i:1"><i style="height:35.4%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:2"><i style="height:28.1%"></i><i style="height:6.7%"></i></div><div class="calc-bar" style="--i:3"><i style="height:34.8%"></i><i style="height:2.8%"></i></div><div class="calc-bar" style="--i:4"><i style="height:24.2%"></i><i style="height:4.5%"></i></div><div class="calc-bar" style="--i:5"><i style="height:25.8%"></i><i style="height:3.9%"></i></div><div class="calc-bar" style="--i:6"><i style="height:55.1%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:7"><i style="height:67.4%"></i><i style="height:32.6%"></i></div><div class="calc-bar" style="--i:8"><i style="height:47.2%"></i><i style="height:39.3%"></i></div><div class="calc-bar" style="--i:9"><i style="height:29.2%"></i><i style="height:61.8%"></i></div><div class="calc-bar" style="--i:10"><i style="height:20.8%"></i><i style="height:28.7%"></i></div><div class="calc-bar" style="--i:11"><i style="height:29.2%"></i><i style="height:46.1%"></i></div></div>
+            <div class="calc-chart__axis" data-calc="axis"><span>Sep</span><span>Okt</span><span>Nov</span><span>Dez</span><span>Jan</span><span>Feb</span><span>Mär</span><span>Apr</span><span>Mai</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
+          </div>
+          <div class="calc-legend"><span><i class="calc-key"></i>ab dem ersten Tag</span><span><i class="calc-key calc-key--plus"></i>zusätzlich mit VPP</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Zwei Karten: Regeln und Meldungen der Steuerung -->
+  <section class="section" id="steuerung" style="--hm: 2" aria-labelledby="steuerung-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="steuerung-h">Die Steuerung arbeitet für dich. <span class="muted">Nach deinen Regeln oder mit KI.</span></h2>
+      </div>
+      <div class="grid fill">
+        <article class="card card--row span-6">
+          <h3>Lädt nur, wenn es sich lohnt</h3>
+          <p>Geladen wird in den günstigsten Viertelstunden, nach Abzug des Batterieverschleißes. Dein Solarstrom hat immer Vorrang.</p>
+          <div class="panel panel--flush">
+            <div class="stage stage--fade-b"><div class="at-right to-edge" style="--ax:32px;--ay:56px" data-ui-loop>
+              <div class="ui ui-panel ui-toggles" data-ui="toggles">
+                <div class="ui-head">
+                  <svg class="ui-icon ui-toggles__ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 4v3.6c0 3-2.1 5.4-5 6.6-2.9-1.2-5-3.6-5-6.6V4z"/><path d="m5.8 8 1.6 1.6 3-3.2"/></svg>
+                  <div class="ui-title">Regeln für deinen Speicher</div>
+                  <span class="ui-spacer"></span>
+                  <div class="ui-meta" data-tg-count>4 von 5 an</div>
+                </div>
+                <ul class="ui-toggles__list">
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Im Preistal laden</span><span class="ui-tg__sub">Die günstigsten Viertelstunden des Tages</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="Im Preistal laden"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Solarstrom zuerst</span><span class="ui-tg__sub">Netzstrom nur für den Rest</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="Solarstrom zuerst"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">20 % Reserve halten</span><span class="ui-tg__sub">Puffer für den Morgen</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="20 Prozent Reserve halten"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Im VPP verkaufen</span><span class="ui-tg__sub">Sobald das VPP läuft</span></span><button class="ui-switch" type="button" role="switch" aria-checked="false" aria-label="Im VPP verkaufen"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">E-Auto im Tal laden</span><span class="ui-tg__sub">Bis 7 Uhr auf 80 %</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="E-Auto im Tal laden"><i></i></button></li>
+                </ul>
+              </div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row span-6">
+          <h3>Meldet, was er gerade tut</h3>
+          <p>Du siehst, wann geladen wird, was die Stunde an der Börse kostet und wann dein Haus aus dem Speicher läuft.</p>
+          <div class="panel panel--flush">
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:380px;--ax:32px;--ay:calc(100% - 180px);--ay-sm:calc(100% - 180px)">
+              <div class="ui ui-notify" data-ui="notify">
+                <ul class="ui-notify__list" data-notify-list>
+                  <li class="ui-note"><span class="ui-note__ico"><svg class="ui-icon" viewBox="0 0 16 16"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"/></svg></span><span class="ui-note__text"><span class="ui-note__title">Plan für morgen fertig<time>13:04</time></span><span class="ui-note__body">Laden 10 bis 16 Uhr, im Schnitt 2,7 ct</span></span></li>
+                  <li class="ui-note"><span class="ui-avatar ui-note__av" data-tone="4">WP</span><span class="ui-note__text"><span class="ui-note__title">Wärmepumpe heizt Wasser<time>12:00</time></span><span class="ui-note__body">Mit Strom aus dem Preistal</span></span></li>
+                  <li class="ui-note"><span class="ui-avatar ui-note__av" data-tone="2">HA</span><span class="ui-note__text"><span class="ui-note__title">Haus läuft aus dem Speicher<time>17:00</time></span><span class="ui-note__body">Börsenpreis jetzt 8,5 ct, bis 20 Uhr 18,3 ct</span></span></li>
+                </ul>
+              </div>
+            </div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Fragen (faq): alle Antworten offen -->
+  <section class="section" id="faq" aria-labelledby="fragen-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="fragen-h">Häufige Fragen zum Speicher</h2>
+          <p class="muted">Kurz beantwortet, bevor du anfragst.</p>
+        </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>Brauche ich eine Solaranlage?</h3><p>Nein. Der Speicher lebt vom Preisunterschied zwischen den Stunden. Hast du eine Solaranlage, hat dein eigener Strom immer Vorrang.</p></div>
+          <div class="faq__item"><h3>Was ist das VoltSurfer-VPP?</h3><p>VPP steht für virtuelles Kraftwerk: viele Speicher, die gemeinsam an der Börse verkaufen. Dafür brauchen wir rund 20 bis 30 Haushalte.</p></div>
+          <div class="faq__item"><h3>Geht das auf die Batterie?</h3><p>Geladen wird nur, wenn es sich nach Abzug des Verschleißes lohnt. Die Garantie bleibt bestehen.</p></div>
+          <div class="faq__item"><h3>Was brauche ich für einen dynamischen Tarif?</h3><p>Ein Smart Meter. Antrag und Tarifwechsel übernehmen wir.</p></div>
+          <div class="faq__item"><h3>Wie lange dauert der Einbau?</h3><p>Meist einen Tag, nach einem Termin vor Ort.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Preise (pricing-three): zwei Größen und Individuell; darunter die Steuerung, manuell ohne Abo oder VoltSurfer KI im Abo -->
+  <section class="section" id="pricing" aria-labelledby="preise-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="preise-h">Preise</h2>
+        <p class="muted">Richtpreise mit Standardinstallation. Muss der Zählerschrank erneuert werden, kommt Aufwand dazu. Du bekommst zuerst ein unverbindliches Angebot, bestellt wird erst mit deinem Auftrag.</p>
+      </div>
+      <div class="grid grid--top">
+        <article class="card card--plan span-4">
+          <h3>VoltSurfer 20</h3>
+          <p class="muted">Bis etwa 12 kWh am Tag</p>
+          <p class="price"><span class="t-stat">ab 9.000&nbsp;€</span></p>
+          <a class="btn btn--secondary" href="#groesse-20">VoltSurfer 20 anfragen</a>
+          <ul class="checks">
+            <li>20 kWh nutzbar, 11 kW Leistung</li>
+            <li>LFP-Zellen für 6.000 Ladezyklen</li>
+            <li><span>507 € im Jahr ohne Wärmepumpe<sup>1</sup></span></li>
+            <li><span>983 € mit VPP<sup>1</sup></span></li>
+          </ul>
+        </article>
+        <article class="card card--plan is-featured span-4 start-5">
+          <h3>VoltSurfer 30</h3>
+          <p class="muted">Mit Wärmepumpe oder E-Auto</p>
+          <p class="price"><span class="t-stat">ab 12.000&nbsp;€</span></p>
+          <a class="btn btn--secondary" href="#groesse-30">VoltSurfer 30 anfragen</a>
+          <ul class="checks">
+            <li>30 kWh nutzbar, 11 kW Leistung</li>
+            <li>LFP-Zellen für 6.000 Ladezyklen</li>
+            <li><span>783 € im Jahr mit Wärmepumpe<sup>1</sup></span></li>
+            <li><span>1.370 € mit VPP<sup>1</sup></span></li>
+          </ul>
+        </article>
+        <article class="card card--plan span-4 start-9">
+          <h3>Individuell</h3>
+          <p class="muted">Wenn du eine andere Größe brauchst</p>
+          <p class="price"><span class="t-stat">Auf Anfrage</span></p>
+          <a class="btn btn--secondary" href="#groesse-individuell">Individuell anfragen</a>
+          <ul class="checks">
+            <li>Speichergröße nach deinem Verbrauch</li>
+            <li>Planung beim Termin vor Ort</li>
+            <li>Unverbindliches Angebot vor dem Auftrag</li>
+          </ul>
+        </article>
+      </div>
+      <div class="grid grid--top plan-steuerung">
+        <div class="span-4 stack-4">
+          <h3>Dazu die Steuerung</h3>
+          <p class="muted">Jeder VoltSurfer lädt nach den Börsenpreisen. Du entscheidest, wer die Regeln festlegt: du selbst oder die VoltSurfer KI.</p>
+        </div>
+        <article class="card card--plan span-4 start-5">
+          <h3>Manuell <span class="badge">ohne Abo</span></h3>
+          <p class="muted">Du wählst die Funktionen selbst aus</p>
+          <ul class="checks">
+            <li>Im Preistal laden</li>
+            <li>Solarstrom zuerst</li>
+            <li>Reserve für den Morgen festlegen</li>
+            <li>E-Auto im Tal laden</li>
+          </ul>
+        </article>
+        <article class="card card--plan span-4 start-9">
+          <h3>VoltSurfer KI <span class="badge">im Abo</span></h3>
+          <p class="muted">Lernt erst deinen Haushalt kennen, dann steuert sie selbst</p>
+          <ul class="checks">
+            <li>Lernt zuerst, wann dein Haushalt Strom braucht</li>
+            <li>Steuert danach Speicher, Wärmepumpe und E-Auto selbst</li>
+            <li>So, dass am meisten übrig bleibt</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Anfrage (booking-form): links der Ablauf, rechts das Formular -->
+  <section class="section" id="contact-form" style="--hm: 2" aria-labelledby="anfrage-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-5">
+          <h2 id="anfrage-h">Beratung bei dir zu Hause</h2>
+          <p class="t-lead">Wir prüfen deinen Zählerschrank und rechnen mit deinen echten Verbrauchswerten, ab dem ersten Tag und mit VPP.</p>
+          <div class="dg dg--steps" data-diagram><script type="application/json">{"layout":"timeline","orient":"h","size":"card","alt":"Fünf Schritte: Anfrage, Termin vor Ort, ein unverbindliches Angebot, dann erteilst du den Auftrag, danach der Einbau, meist an einem Tag.","steps":[{"label":"Anfrage","sub":"heute","icon":"ui:send"},{"label":"Termin","sub":"vor Ort","icon":"ui:house"},{"label":"Angebot","sub":"unverbindlich","icon":"ui:file-text"},{"label":"Auftrag","sub":"erteilen","icon":"ui:handshake"},{"label":"Einbau","sub":"ein Tag","icon":"ui:wrench"}]}</script></div>
+        </div>
+        <form class="form span-6 start-7" action="/api/anfrage" method="post" data-endpoint="/api/anfrage" data-sent="Deine Beratungsanfrage ist da. Wir melden uns per E-Mail, um einen Termin zu finden." novalidate>
+          <div class="field"><label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="100" aria-describedby="f-name-err">
+            <p class="field__error" id="f-name-err" hidden>Schreib deinen Namen, mindestens zwei Buchstaben.</p></div>
+          <div class="field"><label for="f-email">E-Mail</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-email-err">
+            <p class="field__error" id="f-email-err" hidden>Schreib eine E-Mail-Adresse mit @, zum Beispiel name@beispiel.de.</p></div>
+          <div class="field"><label for="f-plz">Postleitzahl</label>
+            <input id="f-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5" aria-describedby="f-plz-err">
+            <p class="field__error" id="f-plz-err" hidden>Schreib die Postleitzahl mit fünf Ziffern.</p></div>
+          <div class="field"><label for="f-kwh">Stromverbrauch im Jahr, in kWh</label>
+            <input id="f-kwh" name="jahresverbrauch_kwh" type="text" inputmode="numeric" autocomplete="off" pattern="[0-9]{3,5}" aria-describedby="f-kwh-err">
+            <p class="field__error" id="f-kwh-err" hidden>Schreib den Verbrauch als Zahl, zum Beispiel 4500.</p></div>
+          <fieldset class="choices field--full">
+            <legend>Welche Größe interessiert dich?</legend>
+            <label class="choice" for="groesse-20"><span>VoltSurfer 20</span><input id="groesse-20" type="radio" name="interesse" value="voltsurfer_20"></label>
+            <label class="choice" for="groesse-30"><span>VoltSurfer 30</span><input id="groesse-30" type="radio" name="interesse" value="voltsurfer_30"></label>
+            <label class="choice" for="groesse-individuell"><span>Individuell</span><input id="groesse-individuell" type="radio" name="interesse" value="individuell"></label>
+            <label class="choice" for="groesse-offen"><span>Noch offen</span><input id="groesse-offen" type="radio" name="interesse" value="unklar" checked></label>
+          </fieldset>
+          <div class="field field--full">
+            <label class="consent" for="f-ok"><input id="f-ok" name="einwilligung" type="checkbox" value="true" required aria-describedby="f-ok-err"><span>Ich bin einverstanden, dass VoltSurfer meine Angaben speichert, um meine Anfrage zu beantworten. Mehr in der <a href="/datenschutz">Datenschutzerklärung</a>.</span></label>
+            <p class="field__error" id="f-ok-err" hidden>Setz den Haken, damit wir deine Anfrage speichern dürfen.</p>
+          </div>
+          <div class="btn-row"><button class="btn btn--primary" type="submit">Beratung anfragen</button></div>
+          <p class="form__status" role="status" data-form-status></p>
+          <p class="t-small muted">Wir melden uns per E-Mail, um einen Termin mit dir zu finden.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer closing" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div><h2 id="close-h">Dein Speicher, mit deinen Zahlen gerechnet</h2><p class="t-lead">Kostenlos und unverbindlich, bei dir vor Ort.</p></div>
+        <a class="btn btn--primary" href="#contact-form">Beratung anfragen<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+      </div>
+      <p class="close__word" aria-hidden="true">VoltSurfer</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="arc" aria-hidden="true"></span>VoltSurfer</a>
+          <p class="footer__lede">Batteriespeicher mit Börsensteuerung</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Speicher</h3><ul><li><a href="#steuerung">Steuerung</a></li><li><a href="#plan">Plan ansehen</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Strom</h3><ul><li><a href="#markt">Strompreise</a></li><li><a href="#ersparnis">Ein Jahr gerechnet</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Kaufen</h3><ul><li><a href="#pricing">Preise</a></li><li><a href="#faq">Fragen</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Rechtliches</h3><ul><li><a href="/impressum">Impressum</a></li><li><a href="/datenschutz">Datenschutz</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 VoltSurfer</span>
+        <div class="socials"></div>
+        <p class="footnote"><sup>1</sup> Day-Ahead-Börsenpreise DE-LU vom 15.08.2025 bis 15.08.2026 (energy-charts.info, SMARD). Ersparnis aus einer Simulation mit diesen Preisen und Standardlastprofilen; der Anteil aus dem VPP setzt dessen Betrieb voraus und hängt von der noch ausstehenden Festlegung der Bundesnetzagentur zum Speicherprivileg ab (§ 21 EnFG, § 118 EnWG).</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="Schnellzugriff">
+  <a class="btn btn--primary" href="#contact-form">Beratung anfragen</a>
+</nav>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/diagrams/mount.js"></script>
+<script type="module" src="rechner.js"></script>
+<script type="module" src="preisuhr.js"></script>
+</body>
+</html>
