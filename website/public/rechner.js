@@ -36,7 +36,7 @@ async function init() {
     el('heute').textContent = `${fmt.format(h.heute.jahr_eur)} €`;
     el('verbund').textContent = `bis ${fmt.format(h.verbund.jahr_eur)} €`;
     const a = years(h.heute.amortisation_jahre), b = years(h.verbund.amortisation_jahre);
-    const amort = a && b ? ` · rechnet sich in etwa ${a} Jahren, mit Verbund in ${b}` : '';
+    const amort = a && b ? ` · rechnet sich in etwa ${a} Jahren, mit VPP in ${b}` : '';
     el('meta').textContent = `Strombedarf ${fmt.format(h.verbrauch_kwh)} kWh im Jahr${amort}`;
 
     const max = Math.max(1, ...h.verbund.monate_eur, ...h.heute.monate_eur);
@@ -45,10 +45,10 @@ async function init() {
       const plus = Math.max(0, h.verbund.monate_eur[i] - base);
       col.children[0].style.height = `${(base / max) * 100}%`;
       col.children[1].style.height = `${(plus / max) * 100}%`;
-      col.title = `${data.monate[i]}: ${fmt.format(base)} € ab dem ersten Tag, ${fmt.format(base + plus)} € mit Verbund`;
+      col.title = `${data.monate[i]}: ${fmt.format(base)} € ab dem ersten Tag, ${fmt.format(base + plus)} € mit VPP`;
     });
     el('chart').setAttribute('aria-label',
-      `Ersparnis je Monat von September bis August: zusammen ${fmt.format(h.heute.jahr_eur)} Euro ab dem ersten Tag, ${fmt.format(h.verbund.jahr_eur)} Euro mit Verbund`);
+      `Ersparnis je Monat von September bis August: zusammen ${fmt.format(h.heute.jahr_eur)} Euro ab dem ersten Tag, ${fmt.format(h.verbund.jahr_eur)} Euro mit VPP`);
   }
 
   form.addEventListener('change', show);

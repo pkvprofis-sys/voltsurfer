@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     eauto: alsBool(body.eauto),
     pv_vorhanden: alsBool(body.pv_vorhanden),
     interesse:
-      interesse && ["voltsurfer_20", "voltsurfer_30", "unklar"].includes(interesse) ? interesse : "unklar",
+      interesse && ["voltsurfer_20", "voltsurfer_30", "individuell", "unklar"].includes(interesse) ? interesse : "unklar",
     nachricht: text(body.nachricht, 5000),
     einwilligung: true,
   };

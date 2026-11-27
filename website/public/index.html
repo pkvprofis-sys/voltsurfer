@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VoltSurfer: Batteriespeicher mit Börsensteuerung für Eigenheime</title>
-<meta name="description" content="Der Speicher lädt in den billigsten Stunden des Tages und versorgt dein Haus am teuren Abend. Zwei Größen, Preise ab 8.000 €, kein Abo.">
+<meta name="description" content="Der Speicher lädt in den billigsten Stunden des Tages und versorgt dein Haus am teuren Abend. Zwei Größen ab 9.000 €, auf Wunsch mit der VoltSurfer KI.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="VoltSurfer: Batteriespeicher mit Börsensteuerung">
-<meta property="og:description" content="Lädt im Preistal, versorgt dein Haus am teuren Abend. Zwei Größen, kein Abo.">
+<meta property="og:description" content="Lädt im Preistal, versorgt dein Haus am teuren Abend. Zwei Größen ab 9.000 €, auf Wunsch mit KI.">
 <meta property="og:image" content="share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -58,8 +58,47 @@
   /* die eine kursive Serifen-Zeile im h1, in der Akzentfarbe (Vorbild des Kunden) */
   .h1-serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--accent); }
   /* der Knoten im ersten Bildschirm: Wirkung und Diagramm füllen den Rahmen, ohne eigene Fläche */
-  .hero--split .hero__media.hero__media--dg { background: var(--bg); }
-  .hero__media--dg > .dg { position: absolute; inset: 0; }
+  /* die Strichzeichnung im ersten Bildschirm: kein Kasten, die Lichtstrahlen laufen weich in den Grund aus */
+  .hero--split .hero__media.hero__media--il { background: transparent; border-radius: 0; overflow: visible; }
+  .hero__media--il > .fx-canvas { -webkit-mask-image: radial-gradient(closest-side at 55% 50%, #000 35%, transparent 100%); mask-image: radial-gradient(closest-side at 55% 50%, #000 35%, transparent 100%); }
+  .il { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  /* ab 1024: die Zeichnung nutzt auch die Lücke zur Textspalte, damit die Szene groß genug wirkt */
+  @media (min-width: 1024px) { .hero__media--il .il { left: -112px; width: calc(100% + 112px); max-width: none; } }
+  .il path, .il rect, .il circle { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .il .il-soft, .il .il-soft > * { stroke: color-mix(in oklab, var(--accent) 50%, transparent); }
+  .il .il-faint, .il .il-faint * { stroke: color-mix(in oklab, var(--accent) 24%, transparent); }
+  .il .il-fill { fill: var(--bg); }
+  .il .il-bold { stroke-width: 2.2; }
+  .il .il-panel { stroke-width: 3.2; }
+  .il .il-solid { fill: var(--accent); stroke: none; }
+  .il .il-window { fill: color-mix(in oklab, var(--accent) 12%, transparent); stroke: var(--accent); }
+  .il .il-dash { stroke-dasharray: 2 8; animation: il-dash 1.4s linear infinite; }
+  .il .il-hero { filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 55%, transparent)); }
+  .il .il-pulse { fill: #f2ffd0; stroke: none; filter: drop-shadow(0 0 6px var(--accent)); }
+  .il .il-blink { animation: il-blink 2.4s ease-in-out infinite; }
+  .il .il-led { stroke: var(--accent); stroke-width: 3; filter: drop-shadow(0 0 4px var(--accent)); }
+  .il .il-hero { animation: il-breathe 3.6s ease-in-out infinite; }
+  .il .il-motes circle { fill: var(--accent); stroke: none; opacity: .5; animation: il-twinkle 3.8s ease-in-out infinite; }
+  .il .il-pulse--tail { filter: none; }
+  @keyframes il-breathe { 50% { filter: drop-shadow(0 0 16px color-mix(in oklab, var(--accent) 75%, transparent)); } }
+  @keyframes il-twinkle { 0%, 100% { opacity: .12; } 50% { opacity: .7; } }
+  /* Faktenleiste am Fuß der Textspalte, wie die Logozeile im Vorbild, aber mit eigenen Fakten */
+  .hero--split .hero__text { display: flex; flex-direction: column; align-self: stretch; }
+  .hero__text > .hero-facts { margin-top: auto; padding-top: var(--s-5); border-top: 1px solid var(--line); }
+  .il .il-chip rect { fill: color-mix(in oklab, var(--surface) 92%, transparent); stroke: color-mix(in oklab, var(--accent) 35%, transparent); stroke-width: 1; }
+  .il .il-chip text { fill: var(--ink); font: 500 19px var(--font-text); }
+  .il .il-chip .il-mono { fill: var(--accent); font-family: var(--font-mono); }
+  @keyframes il-dash { to { stroke-dashoffset: -20; } }
+  /* Preise: die Steuerung als zweite Reihe unter den drei Größen */
+  #pricing .plan-steuerung { margin-top: var(--s-8); }
+  /* zwei Kartenreihen passen nicht in einen Bildschirm, zwei Bildschirme ließen eine Lücke: der Abschnitt wächst mit */
+  @media (min-width: 1280px) { #pricing { height: auto; min-height: 100vh; min-height: 100svh; } }
+  /* Preisuhr (preisuhr.js): der Balken der gezeigten Stunde leuchtet, nicht der letzte */
+  .ui-stat[data-uhr] .ui-stat__bars rect:last-child { fill: var(--u-fill-3); }
+  .ui-stat[data-uhr] .ui-stat__bars rect.is-now { fill: var(--u-accent); }
+  @keyframes il-blink { 50% { opacity: .35; } }
+  @media (max-width: 639px) { .il .il-chip { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .il .il-dash, .il .il-blink, .il .il-hero, .il .il-motes circle { animation: none; } .il .il-pulses { display: none; } }
   /* app-frame (sections-library.md, app-frame) */
   .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
   .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
@@ -82,26 +121,24 @@
   }
   /* die Karten der Steuerung */
   #steuerung .panel { --p-h: 336px; }
-  #pricing .panel { --p-h: 300px; }
   /* der Ablauf steht auf dem dunklen Seitengrund, nicht auf dem hellen UI-Grund: so bleiben seine Beschriftungen lesbar */
   #contact-form .dg--steps { height: 240px; }
   /* die Größenwahl im Formular: drei Knöpfe in einer Zeile */
   .choices { display: grid; gap: var(--s-2); border: 0; margin: 0; padding: 0; }
   /* der Name im Abschluss: Instrument Sans braucht mehr Höhe als .86, sonst schneidet die Oberlänge ab */
-  .close__word { line-height: 1.04; }
+  /* der Schriftzug im Footer: etwa halb so groß wie im Baukasten, damit er nicht über die Seite drückt */
+  .close__word { line-height: 1.04; font-size: clamp(48px, 7.2vw, 104px); }
   .choices legend { width: 100%; margin-bottom: var(--s-2); font-size: var(--t-small); font-weight: 500; }
   .choice { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 44px; border-bottom: 1px solid var(--line); font-size: var(--t-body); cursor: pointer; }
   .choice:has(input:checked) > span { color: var(--accent); }
   .choice input, .consent input { accent-color: var(--action); width: 18px; height: 18px; margin: 0; }
   .consent { display: grid; grid-template-columns: 18px 1fr; gap: var(--s-3); align-items: start; font-size: var(--t-small); font-weight: 400; color: var(--ink); }
   .consent a { text-decoration: underline; text-underline-offset: 3px; }
-  /* die Aufteilung "ab dem ersten Tag" und "mit Verbund" als ein Balken */
+  /* die Aufteilung "ab dem ersten Tag" und "mit VPP" als ein Balken */
   .split-bar { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--line); }
   .split-bar > span:first-child { flex: 0 0 57%; background: var(--accent); }
   .split-bar > span:last-child { flex: 1 1 auto; background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--accent) 55%, transparent) 0 6px, transparent 6px 11px); }
   .split-legend { display: flex; justify-content: space-between; gap: var(--s-4); font-size: var(--t-small); }
-  /* Tablet: die Preise brauchen dort zwei Bildschirme */
-  @media (min-width: 640px) and (max-width: 1023px) { #pricing { --h: 2; } }
   .footnote { font-size: var(--t-label); color: var(--muted); max-width: 110ch; }
   /* Rechner: Eingaben links, Ergebnis rechts (ein Bild aus der Simulation) */
   .calc-form { display: grid; gap: var(--s-4); }
@@ -198,18 +235,122 @@
       <div class="hero__text span-5">
         <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Für Eigenheime, mit oder ohne Solaranlage</p>
         <h1 id="hero-h">Heimspeicher, der <span class="h1-serif">zu Börsenpreisen</span> lädt</h1>
-        <p class="hero__lead">An einem Sommertag kostet Strom an der Börse mittags im Schnitt 1&nbsp;Cent, abends 18. VoltSurfer lädt deinen Speicher im Preistal und versorgt dein Haus, wenn es teuer wird.</p>
+        <p class="hero__lead">An Sommertagen kostet Strom an der Börse mittags im Schnitt 1&nbsp;Cent, abends 18. VoltSurfer lädt im Preistal und versorgt dein Haus, wenn es teuer wird.</p>
         <div class="btn-row">
           <a class="btn btn--primary" href="#contact-form">Beratung anfragen<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
           <a class="btn btn--secondary" href="#plan">Plan ansehen</a>
         </div>
+        <dl class="hero-facts">
+          <div><dt>Laden und Entladen</dt><dd>11&nbsp;kW</dd></div>
+          <div><dt>LFP-Zellen</dt><dd>6.000 Ladezyklen</dd></div>
+          <div><dt>Preis</dt><dd>ab 9.000&nbsp;€</dd></div>
+        </dl>
       </div>
-      <div class="hero__media hero__media--dg span-6 start-7" data-fx="god-rays" data-fx-seed="11" data-fx-params='{"originX":0.78,"originY":-0.3,"tilt":-14,"spread":52,"density":0.32,"intensity":0.6}'>
-        <div class="dg" data-diagram><script type="application/json">{"layout":"hub","curve":"curve","ground":"glow","alt":"VoltSurfer in der Mitte, verbunden mit Strombörse, Stromnetz, Solaranlage, Haus, Wärmepumpe und E-Auto.","center":{"label":"VoltSurfer","icon":"ui:battery-charging"},"spokes":[{"label":"Strombörse","icon":"ui:chart-line"},{"label":"Stromnetz","icon":"ui:utility-pole"},{"label":"Solaranlage","icon":"ui:sun"},{"label":"Haus","icon":"ui:house"},{"label":"Wärmepumpe","icon":"ui:heater"},{"label":"E-Auto","icon":"ui:car"}]}</script></div>
-        <div class="ly-float">
-          <div class="ly-float__row"><span class="ly-live">Plan für morgen</span><span>13:00</span></div>
-          <div class="ly-float__title">Laden 10 bis 16 Uhr, im Schnitt 2,7&nbsp;ct</div>
-        </div>
+      <div class="hero__media hero__media--il span-6 start-7" data-fx="god-rays" data-fx-seed="11" data-fx-params='{"originX":0.62,"originY":-0.3,"tilt":-12,"spread":48,"density":0.3,"intensity":0.55}'>
+        <!-- Strichzeichnung der Anlage (vom Kunden gewünscht): Strommast, aufgeschnittenes Haus mit dem VoltSurfer-Speicher
+             im Technikraum, Wärmepumpe, Carport mit E-Auto an der Wallbox; jeder Stromfluss hat eine eigene Leitung -->
+        <svg class="il" viewBox="0 120 922 430" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Strichzeichnung: ein Strommast, ein modernes Haus mit Solarmodulen, im Haus der VoltSurfer-Speicher, draußen eine Wärmepumpe und unter einem Carport ein E-Auto an der Wallbox; getrennte Leitungen mit Lichtpunkten zeigen, wie Strom aus Netz und Solar in den Speicher und vom Speicher zu Haus, Wärmepumpe und Auto fließt">
+          <!-- Leuchtpartikel -->
+          <g class="il-motes">
+            <circle cx="420" cy="152" r="1.3"/><circle cx="470" cy="214" r="1" style="animation-delay:-1.1s"/><circle cx="522" cy="170" r="1.5" style="animation-delay:-2.3s"/>
+            <circle cx="604" cy="138" r="1.1" style="animation-delay:-.6s"/><circle cx="662" cy="204" r="1.4" style="animation-delay:-3s"/><circle cx="722" cy="158" r="1" style="animation-delay:-1.8s"/>
+            <circle cx="784" cy="232" r="1.3" style="animation-delay:-2.7s"/><circle cx="826" cy="176" r="1" style="animation-delay:-.3s"/><circle cx="452" cy="262" r="1.2" style="animation-delay:-1.5s"/>
+            <circle cx="362" cy="232" r="1" style="animation-delay:-2s"/><circle cx="250" cy="244" r="1.3" style="animation-delay:-.9s"/><circle cx="702" cy="266" r="1.1" style="animation-delay:-3.4s"/>
+            <circle cx="540" cy="244" r="1" style="animation-delay:-2.5s"/><circle cx="304" cy="290" r="1.2" style="animation-delay:-.2s"/>
+          </g>
+          <!-- Boden -->
+          <path class="il-faint" d="M0 520H922"/>
+          <!-- Strommast, etwas zurückgenommen wie in der Ferne -->
+          <g class="il-soft">
+            <path d="M50 520L63 260L67 236L70 226L73 236L77 260L90 520"/>
+            <path d="M51 500L87 460M89 500L53 460M53 460L85 420M87 460L55 420M55 420L83 380M85 420L57 380M57 380L81 340M83 380L59 340M59 340L79 300M81 340L61 300M61 300L77 260M79 300L63 260"/>
+            <path d="M36 262H104M48 240H92M40 262v10M100 262v10M52 240v8M88 240v8"/>
+            <path d="M40 272Q20 290 0 284M52 248Q26 262 0 258"/>
+          </g>
+          <!-- Wärmepumpe, draußen neben dem Haus -->
+          <rect class="il-fill il-line" x="190" y="476" width="58" height="44" rx="4"/>
+          <circle class="il-line" cx="213" cy="498" r="14"/>
+          <circle class="il-soft" cx="213" cy="498" r="9"/><circle class="il-soft" cx="213" cy="498" r="3.5"/>
+          <path class="il-soft" d="M236 484v28M240 484v28M244 484v28"/>
+          <!-- Haus, aufgeschnitten: links der Wohnteil mit zwei Geschossen, rechts der Technikraum mit Solardach -->
+          <path class="il-fill" d="M272 520V336H440V404H590V520Z"/>
+          <path class="il-line" d="M266 336H446M272 336V520M440 336V404M434 404H596M590 404V520"/>
+          <path class="il-faint" d="M272 428H440M440 404V520"/>
+          <path class="il-window" d="M292 352h128v52h-128z"/>
+          <path class="il-soft" d="M356 352v52"/>
+          <path class="il-line" d="M292 520v-64h26v64"/>
+          <!-- Stehlampe im Wohnraum: hier kommt der Strom für das Haus an -->
+          <path class="il-soft" d="M404 520V474M396 520h16"/>
+          <path class="il-fill il-line" d="M394 474h20l-4-12h-12z"/>
+          <circle class="il-solid il-blink" cx="404" cy="478" r="2"/>
+          <!-- Solarmodule auf dem Technikraum -->
+          <path class="il-panel" d="M450 400l28-15M490 400l28-15M530 400l28-15"/>
+          <path class="il-soft" d="M472 388.5V404M512 388.5V404M552 388.5V404"/>
+          <!-- Leitungen, jede für sich: Netz und Solar in den Speicher; Haus, Wärmepumpe und Auto aus dem Speicher -->
+          <path class="il-soft" d="M100 272Q190 340 272 360"/>
+          <path class="il-line il-dash" d="M100 272Q190 340 272 360"/>
+          <circle class="il-solid" cx="272" cy="360" r="2.4"/>
+          <path class="il-soft il-dash" d="M272 360H282V446H522"/>
+          <path class="il-soft il-dash" d="M540 395V432"/>
+          <path class="il-soft il-dash" d="M522 500H404V478"/>
+          <path class="il-soft il-dash" d="M540 520V536H219V520"/>
+          <path class="il-soft" d="M558 466H660"/>
+          <!-- VoltSurfer-Speicher im Technikraum -->
+          <g class="il-hero">
+            <rect class="il-fill" x="522" y="432" width="36" height="88" rx="8"/>
+            <rect class="il-line il-bold" x="522" y="432" width="36" height="88" rx="8"/>
+            <rect class="il-soft" x="528" y="439" width="24" height="74" rx="5"/>
+            <path class="il-solid" transform="translate(534 445) scale(.5)" d="M2.5 21.5V12a9.5 9.5 0 0 1 19 0v9.5h-6V12a3.5 3.5 0 0 0-7 0v9.5z"/>
+            <path class="il-soft" d="M540 466V502"/>
+            <path class="il-led" d="M540 502V476"/>
+            <circle class="il-solid il-blink" cx="540" cy="508" r="1.8"/>
+          </g>
+          <!-- Carport mit Flachdach, Wallbox am linken Pfosten -->
+          <rect class="il-fill il-line" x="640" y="410" width="282" height="8" rx="1"/>
+          <path class="il-faint" d="M646 422H916"/>
+          <rect class="il-fill il-soft" x="652" y="418" width="6" height="102"/>
+          <rect class="il-fill il-soft" x="906" y="418" width="6" height="102"/>
+          <rect class="il-fill il-line" x="660" y="448" width="16" height="30" rx="3"/>
+          <circle class="il-solid il-blink" cx="668" cy="457" r="1.8"/>
+          <path class="il-line il-dash" d="M668 478C668 498 694 500 701 482.5"/>
+          <!-- E-Auto: Tesla-Limousine nach der Strichzeichnung des Kunden, von Hand nachgezogen und gespiegelt,
+               ohne Markenzeichen; Ladekabel an der Rückleuchte -->
+          <path class="il-fill il-line" d="M897.3 509.6C896.7 506.6 895.9 502.7 895.7 498.1C895.5 494.2 895.3 491.6 894.1 489.6C892.5 487 888.9 485.1 882.3 483.1C871.9 480.1 853.7 477 836.7 473.6C827.6 469.4 817.1 463.9 806.7 460.3C796.3 456.6 783.2 455.1 771.5 454.9C754.5 454.9 738.9 457.7 725.8 462.9C714.1 467.5 702.3 471 690.3 472C691.9 473.3 693.5 474.4 693.9 475.3C691.3 479.9 689 486.4 688.5 492.9C688 498.1 688.7 503.3 690.3 506.6C694.5 509.2 702.3 510.5 709.5 511.8L710.6 512.4A19.6 19.6 0 1 1 745 512.4H845.6A19.6 19.6 0 1 1 879.4 512.4C890 512.4 896 511.5 897.3 509.6Z"/>
+          <path class="il-window" d="M812.6 475.3C809.3 469.4 801.5 463.6 791 460.6C787.1 459.6 783.9 459.1 780.3 458.9L783.5 473.6ZM774.7 458.7C765 458.6 754.5 459.3 748.3 460.3L743.8 470.1C754.5 471 766.3 472.3 778 473.3ZM746 460.8C739.5 462.3 734.7 464.5 731.7 466.8C734.7 468.1 738.2 469.2 741.5 469.8Z"/>
+          <path class="il-fill il-line" d="M783.5 473.6L780.3 458.9L774.7 458.7L778 473.3Z"/>
+          <path class="il-fill il-soft" d="M825 475.7C824.7 472.7 822.3 470.1 817.8 469.7C815.2 469.7 813.5 471 813 473.3C813.2 474.6 817.1 475.3 825 475.7Z"/>
+          <path class="il-soft" d="M830.2 476.2C832 482.5 832.8 495.5 832.1 505.3M782.6 474L782.2 507.3M733.4 473.1C736.3 482.5 740.2 491.6 748 499.4C751.9 503.3 754.5 505.9 755.8 507.3M832.1 505.3L755.8 507"/>
+          <path class="il-faint" d="M841.9 509.6L746.7 509.9M733.7 473.3C723.2 472.8 712.8 472.6 702.3 473.3M848.4 484C845.8 484.8 843.2 485.7 840.6 486.4M894.7 501.4C892.1 502.3 888.9 502.7 886.5 502.3M699.7 491.6C695.8 491.3 691.9 491.1 688.7 490.6"/>
+          <path class="il-line il-bold" d="M796.9 480.1L786.9 479.2M750 477.5L740.4 476.7"/>
+          <path class="il-solid" d="M893.4 486.6C889.5 484.8 883.7 484 877.8 484C879.7 485.7 883.7 487 888.2 487.7C890.2 487.7 892.1 487.4 893.4 486.6ZM704.7 478.3C702.3 476.2 698.4 475.3 693.9 475.4L693.2 479.9C697.1 480.1 701 479.9 704.7 478.3Z"/>
+          <circle class="il-solid" cx="701" cy="482.5" r="1.6"/>
+          <circle class="il-fill il-line il-bold" cx="727.8" cy="503" r="17"/><circle class="il-soft" cx="727.8" cy="503" r="13.7"/><circle class="il-soft" cx="727.8" cy="503" r="3.4"/>
+          <path class="il-soft" d="M727.2 499.2L726.7 490.4M728.4 499.2L728.9 490.4M731.2 501.3L739.4 498.1M731.6 502.4L740.1 500.2M730.5 505.7L736.1 512.5M729.5 506.4L734.3 513.8M726.1 506.4L721.3 513.8M725.1 505.7L719.5 512.5M724 502.4L715.5 500.2M724.4 501.3L716.2 498.1"/>
+          <circle class="il-fill il-line il-bold" cx="862.5" cy="503" r="17"/><circle class="il-soft" cx="862.5" cy="503" r="13.7"/><circle class="il-soft" cx="862.5" cy="503" r="3.4"/>
+          <path class="il-soft" d="M861.9 499.2L861.4 490.4M863.1 499.2L863.6 490.4M865.9 501.3L874.1 498.1M866.3 502.4L874.8 500.2M865.2 505.7L870.8 512.5M864.2 506.4L869 513.8M860.8 506.4L856 513.8M859.8 505.7L854.2 512.5M858.7 502.4L850.2 500.2M859.1 501.3L850.9 498.1"/>
+          <!-- Lichtpunkte, je Leitung eigene: Netz und Solar laden, der Speicher versorgt Haus, Wärmepumpe und Auto -->
+          <g class="il-pulses">
+            <circle class="il-pulse" r="3.4"><animateMotion dur="4s" begin="0s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.55"><animateMotion dur="4s" begin="0.09s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.25"><animateMotion dur="4s" begin="0.18s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle>
+            <circle class="il-pulse" r="3.4"><animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.55"><animateMotion dur="4s" begin="2.09s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle><circle class="il-pulse il-pulse--tail" r="2.4" style="opacity:0.25"><animateMotion dur="4s" begin="2.18s" repeatCount="indefinite" path="M100 272Q190 340 272 360H282V446H522"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="1.6s" begin="0.6s" repeatCount="indefinite" path="M540 395V432"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="1.6s" begin="0.69s" repeatCount="indefinite" path="M540 395V432"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="1.6s" begin="0.78s" repeatCount="indefinite" path="M540 395V432"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="2.4s" begin="1s" repeatCount="indefinite" path="M522 500H404V478"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="2.4s" begin="1.09s" repeatCount="indefinite" path="M522 500H404V478"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="2.4s" begin="1.18s" repeatCount="indefinite" path="M522 500H404V478"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="3.2s" begin="1.2s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="3.2s" begin="1.29s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="3.2s" begin="1.38s" repeatCount="indefinite" path="M540 520V536H219V520"/></circle>
+            <circle class="il-pulse" r="3"><animateMotion dur="2.6s" begin="0.3s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.55"><animateMotion dur="2.6s" begin="0.39s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle><circle class="il-pulse il-pulse--tail" r="2.1" style="opacity:0.25"><animateMotion dur="2.6s" begin="0.48s" repeatCount="indefinite" path="M558 466H660L668 478C668 498 694 500 701 482.5"/></circle>
+          </g>
+          <!-- Hinweisfelder -->
+          <g class="il-chip">
+            <path class="il-soft" d="M70 226C70 190 96 169 120 169"/>
+            <circle class="il-solid" cx="120" cy="169" r="3"/>
+            <rect x="126" y="146" width="262" height="46" rx="12"/>
+            <text x="144" y="175"><tspan class="il-mono">13:00</tspan> Preise für morgen</text>
+          </g>
+          <g class="il-chip">
+            <path class="il-soft" d="M640 346C640 374 604 385 562 385"/>
+            <circle class="il-solid" cx="562" cy="385" r="3"/>
+            <rect x="600" y="300" width="292" height="46" rx="12"/>
+            <text x="618" y="329">Laden 10–16 Uhr <tspan class="il-mono">Ø 2,7 ct</tspan></text>
+          </g>
+        </svg>
       </div>
     </div></div>
   </section>
@@ -261,7 +402,7 @@
           </div>
         </div>
         <div class="app__pane app__pane--open" data-ui-loop>
-          <div class="ui ui-panel ui-stat" data-ui="stat" data-values="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13" data-prev="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-ui-opts='{"fill":true}'>
+          <div class="ui ui-panel ui-stat" data-uhr data-ui="stat" data-values="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13" data-prev="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-ui-opts='{"fill":true}'>
             <div class="ui-stat__head">
               <div class="ui-stat__top">
                 <span class="ui-stat__label">Börsenpreis je Stunde, netto</span>
@@ -299,7 +440,7 @@
         <div class="frame frame--split span-6 start-7">
           <div class="stage stage--fade-br">
             <div class="at-corner" style="--ax:56px;--ay:56px" data-ui-loop>
-              <div class="ui ui-panel ui-stat" data-ui="stat" data-values="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-prev="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13">
+              <div class="ui ui-panel ui-stat" data-uhr data-ui="stat" data-values="8.3,8,7.7,7.6,7.6,8,9.1,10.9,11.9,11.4,10.6,10.2,10,10.2,10.9,12.1,13.1,13.7,12.9,11.8,10.6,9.8,9.5,8.6" data-prev="12.3,11.6,11.2,11.1,11.2,11.6,12.7,12.7,11,8.3,5.6,3.7,2.1,1,1.2,2.7,5,8.5,12.2,16.2,18.3,17,14.9,13">
                 <div class="ui-stat__head">
                   <div class="ui-stat__top">
                     <span class="ui-stat__label">Börsenpreis je Stunde, netto</span>
@@ -331,20 +472,20 @@
   <section class="section" id="ersparnis" aria-labelledby="ersparnis-h">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="ersparnis-h">Ein Jahr Börsenpreise, durchgerechnet. <span class="muted">Mit und ohne Verbund.</span></h2>
+        <h2 id="ersparnis-h">Ein Jahr Börsenpreise, durchgerechnet. <span class="muted">Mit und ohne VPP.</span></h2>
       </div>
       <div class="grid grid--top">
         <div class="span-5 stack-4">
           <p class="t-lead">Gerechnet für einen VoltSurfer 30 in einem Haus mit drei Personen und Wärmepumpe, gegen einen Festpreis von 35&nbsp;ct je Kilowattstunde.<sup>1</sup></p>
-          <p>Die 783&nbsp;€ entstehen ab dem Tag der Installation. Den Rest bringt der VoltSurfer-Verbund, sobald rund 20 bis 30 Speicher gemeinsam an der Börse verkaufen. Den gibt es noch nicht, deshalb rechnen wir dir beides getrennt vor.</p>
-          <div class="stack-3" role="img" aria-label="Von 1.370 Euro im Jahr entstehen 783 Euro ab dem ersten Tag, 587 Euro erst mit dem Verbund">
+          <p>Die 783&nbsp;€ entstehen ab dem Tag der Installation. Den Rest bringt das VoltSurfer-VPP, ein virtuelles Kraftwerk, sobald rund 20 bis 30 Speicher gemeinsam an der Börse verkaufen. Den gibt es noch nicht, deshalb rechnen wir dir beides getrennt vor.</p>
+          <div class="stack-3" role="img" aria-label="Von 1.370 Euro im Jahr entstehen 783 Euro ab dem ersten Tag, 587 Euro erst mit dem VPP">
             <div class="split-bar"><span></span><span></span></div>
-            <div class="split-legend"><span>783 € ab dem ersten Tag</span><span class="muted">+ 587 € mit Verbund</span></div>
+            <div class="split-legend"><span>783 € ab dem ersten Tag</span><span class="muted">+ 587 € mit VPP</span></div>
           </div>
         </div>
         <div class="span-6 start-7 stats" data-moment="counter-rolls">
           <div><p class="t-stat">783 €</p><p class="t-small muted">im Jahr gespart, ab dem ersten Tag</p></div>
-          <div><p class="t-stat">1.370 €</p><p class="t-small muted">im Jahr, wenn der Verbund mitverkauft</p></div>
+          <div><p class="t-stat">1.370 €</p><p class="t-small muted">im Jahr, wenn das VPP mitverkauft</p></div>
           <div><p class="t-stat">15,6 ct</p><p class="t-small muted">liegen im Schnitt zwischen billigster und teuerster Stunde</p></div>
           <div><p class="t-stat">96 Tage</p><p class="t-small muted">mit Börsenpreisen unter null im letzten Jahr</p></div>
         </div>
@@ -385,14 +526,14 @@
         <div class="ui ui-panel calc-out span-6 start-7" aria-live="polite">
           <div class="calc-out__nums">
             <div><p class="calc-out__label">Gespart im Jahr, ab dem ersten Tag</p><p class="calc-out__big" data-calc="heute">783 €</p></div>
-            <div><p class="calc-out__label">Mit dem VoltSurfer-Verbund</p><p class="calc-out__mid" data-calc="verbund">bis 1.370 €</p></div>
+            <div><p class="calc-out__label">Mit dem VoltSurfer-VPP</p><p class="calc-out__mid" data-calc="verbund">bis 1.370 €</p></div>
           </div>
-          <p class="calc-out__meta" data-calc="meta">Strombedarf 7.686 kWh im Jahr · rechnet sich in etwa 14 Jahren, mit Verbund in 8</p>
+          <p class="calc-out__meta" data-calc="meta">Strombedarf 7.686 kWh im Jahr · rechnet sich in etwa 15 Jahren, mit VPP in 9</p>
           <div class="calc-chart" role="img" data-calc="chart" aria-label="Ersparnis je Monat von September bis August">
             <div class="calc-chart__bars" data-calc="bars"><div class="calc-bar" style="--i:0"><i style="height:33.1%"></i><i style="height:42.1%"></i></div><div class="calc-bar" style="--i:1"><i style="height:35.4%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:2"><i style="height:28.1%"></i><i style="height:6.7%"></i></div><div class="calc-bar" style="--i:3"><i style="height:34.8%"></i><i style="height:2.8%"></i></div><div class="calc-bar" style="--i:4"><i style="height:24.2%"></i><i style="height:4.5%"></i></div><div class="calc-bar" style="--i:5"><i style="height:25.8%"></i><i style="height:3.9%"></i></div><div class="calc-bar" style="--i:6"><i style="height:55.1%"></i><i style="height:25.8%"></i></div><div class="calc-bar" style="--i:7"><i style="height:67.4%"></i><i style="height:32.6%"></i></div><div class="calc-bar" style="--i:8"><i style="height:47.2%"></i><i style="height:39.3%"></i></div><div class="calc-bar" style="--i:9"><i style="height:29.2%"></i><i style="height:61.8%"></i></div><div class="calc-bar" style="--i:10"><i style="height:20.8%"></i><i style="height:28.7%"></i></div><div class="calc-bar" style="--i:11"><i style="height:29.2%"></i><i style="height:46.1%"></i></div></div>
             <div class="calc-chart__axis" data-calc="axis"><span>Sep</span><span>Okt</span><span>Nov</span><span>Dez</span><span>Jan</span><span>Feb</span><span>Mär</span><span>Apr</span><span>Mai</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
           </div>
-          <div class="calc-legend"><span><i class="calc-key"></i>ab dem ersten Tag</span><span><i class="calc-key calc-key--plus"></i>zusätzlich mit Verbund</span></div>
+          <div class="calc-legend"><span><i class="calc-key"></i>ab dem ersten Tag</span><span><i class="calc-key calc-key--plus"></i>zusätzlich mit VPP</span></div>
         </div>
       </div>
     </div>
@@ -402,7 +543,7 @@
   <section class="section" id="steuerung" style="--hm: 2" aria-labelledby="steuerung-h">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="steuerung-h">Die Steuerung arbeitet für dich. <span class="muted">Du stellst nichts ein.</span></h2>
+        <h2 id="steuerung-h">Die Steuerung arbeitet für dich. <span class="muted">Nach deinen Regeln oder mit KI.</span></h2>
       </div>
       <div class="grid fill">
         <article class="card card--row span-6">
@@ -421,7 +562,7 @@
                   <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Im Preistal laden</span><span class="ui-tg__sub">Die günstigsten Viertelstunden des Tages</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="Im Preistal laden"><i></i></button></li>
                   <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Solarstrom zuerst</span><span class="ui-tg__sub">Netzstrom nur für den Rest</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="Solarstrom zuerst"><i></i></button></li>
                   <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">20 % Reserve halten</span><span class="ui-tg__sub">Puffer für den Morgen</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="20 Prozent Reserve halten"><i></i></button></li>
-                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Am Verbund verkaufen</span><span class="ui-tg__sub">Sobald der Verbund läuft</span></span><button class="ui-switch" type="button" role="switch" aria-checked="false" aria-label="Am Verbund verkaufen"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">Im VPP verkaufen</span><span class="ui-tg__sub">Sobald das VPP läuft</span></span><button class="ui-switch" type="button" role="switch" aria-checked="false" aria-label="Im VPP verkaufen"><i></i></button></li>
                   <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">E-Auto im Tal laden</span><span class="ui-tg__sub">Bis 7 Uhr auf 80 %</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="E-Auto im Tal laden"><i></i></button></li>
                 </ul>
               </div>
@@ -457,7 +598,7 @@
         </div>
         <div class="faq span-6 start-7">
           <div class="faq__item"><h3>Brauche ich eine Solaranlage?</h3><p>Nein. Der Speicher lebt vom Preisunterschied zwischen den Stunden. Hast du eine Solaranlage, hat dein eigener Strom immer Vorrang.</p></div>
-          <div class="faq__item"><h3>Was ist der VoltSurfer-Verbund?</h3><p>Viele Speicher, die gemeinsam an der Börse verkaufen. Dafür brauchen wir rund 20 bis 30 Haushalte.</p></div>
+          <div class="faq__item"><h3>Was ist das VoltSurfer-VPP?</h3><p>VPP steht für virtuelles Kraftwerk: viele Speicher, die gemeinsam an der Börse verkaufen. Dafür brauchen wir rund 20 bis 30 Haushalte.</p></div>
           <div class="faq__item"><h3>Geht das auf die Batterie?</h3><p>Geladen wird nur, wenn es sich nach Abzug des Verschleißes lohnt. Die Garantie bleibt bestehen.</p></div>
           <div class="faq__item"><h3>Was brauche ich für einen dynamischen Tarif?</h3><p>Ein Smart Meter. Antrag und Tarifwechsel übernehmen wir.</p></div>
           <div class="faq__item"><h3>Wie lange dauert der Einbau?</h3><p>Meist einen Tag, nach einem Termin vor Ort.</p></div>
@@ -466,56 +607,72 @@
     </div>
   </section>
 
-  <!-- 7 · Preise (pricing-two) -->
-  <section class="section" id="pricing" style="--hm: 2" aria-labelledby="preise-h">
+  <!-- 7 · Preise (pricing-three): zwei Größen und Individuell; darunter die Steuerung, manuell ohne Abo oder VoltSurfer KI im Abo -->
+  <section class="section" id="pricing" aria-labelledby="preise-h">
     <div class="wrap">
+      <div class="section-head">
+        <h2 id="preise-h">Preise</h2>
+        <p class="muted">Richtpreise mit Standardinstallation. Muss der Zählerschrank erneuert werden, kommt Aufwand dazu. Du bekommst zuerst ein unverbindliches Angebot, bestellt wird erst mit deinem Auftrag.</p>
+      </div>
       <div class="grid grid--top">
-        <div class="span-4 stack-5">
-          <h2 id="preise-h">Preise</h2>
-          <p class="muted">Richtpreise mit Standardinstallation. Du kaufst den Speicher einmal, die Steuerung ist dabei, ein Abo gibt es nicht.</p>
-          <div class="panel panel--flush">
-            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:340px;--ax:max(24px, 50% - 170px);--ay:32px;--ay-sm:24px" data-ui-loop>
-              <div class="ui ui-panel ui-checks" data-ui="checklist">
-                <div class="ui-checks__head">
-                  <div class="ui-title">Im Preis enthalten</div>
-                  <span class="ui-spacer"></span>
-                  <div class="ui-meta" data-checks-count>2 von 5</div>
-                </div>
-                <div class="ui-checks__bar"><i data-checks-bar style="--k:0.4"></i></div>
-                <ul class="ui-checks__list">
-                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Termin vor Ort</span></li>
-                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Smart Meter beantragen</span></li>
-                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Dynamischen Tarif einrichten</span></li>
-                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Speicher einbauen, 11 kW</span></li>
-                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"/></svg></span><span class="ui-check__label">Beim Netzbetreiber anmelden</span></li>
-                </ul>
-              </div>
-            </div></div>
-          </div>
-          <p class="t-small muted">Muss der Zählerschrank erneuert werden, kommt Aufwand dazu. Vor der Bestellung bekommst du ein verbindliches Angebot.</p>
-        </div>
-        <article class="card card--plan span-4 start-5">
+        <article class="card card--plan span-4">
           <h3>VoltSurfer 20</h3>
           <p class="muted">Bis etwa 12 kWh am Tag</p>
-          <p class="price"><span class="t-stat">8.000 €</span></p>
+          <p class="price"><span class="t-stat">ab 9.000&nbsp;€</span></p>
           <a class="btn btn--secondary" href="#groesse-20">VoltSurfer 20 anfragen</a>
           <ul class="checks">
             <li>20 kWh nutzbar, 11 kW Leistung</li>
             <li>LFP-Zellen für 6.000 Ladezyklen</li>
             <li><span>507 € im Jahr ohne Wärmepumpe<sup>1</sup></span></li>
-            <li><span>983 € mit Verbund<sup>1</sup></span></li>
+            <li><span>983 € mit VPP<sup>1</sup></span></li>
           </ul>
         </article>
-        <article class="card card--plan is-featured span-4 start-9">
+        <article class="card card--plan is-featured span-4 start-5">
           <h3>VoltSurfer 30</h3>
           <p class="muted">Mit Wärmepumpe oder E-Auto</p>
-          <p class="price"><span class="t-stat">11.000 €</span></p>
+          <p class="price"><span class="t-stat">ab 12.000&nbsp;€</span></p>
           <a class="btn btn--secondary" href="#groesse-30">VoltSurfer 30 anfragen</a>
           <ul class="checks">
             <li>30 kWh nutzbar, 11 kW Leistung</li>
             <li>LFP-Zellen für 6.000 Ladezyklen</li>
-            <li>Zwei Ladefenster am Tag</li>
-            <li>Mehr Speicher für den Verbund</li>
+            <li><span>783 € im Jahr mit Wärmepumpe<sup>1</sup></span></li>
+            <li><span>1.370 € mit VPP<sup>1</sup></span></li>
+          </ul>
+        </article>
+        <article class="card card--plan span-4 start-9">
+          <h3>Individuell</h3>
+          <p class="muted">Wenn du eine andere Größe brauchst</p>
+          <p class="price"><span class="t-stat">Auf Anfrage</span></p>
+          <a class="btn btn--secondary" href="#groesse-individuell">Individuell anfragen</a>
+          <ul class="checks">
+            <li>Speichergröße nach deinem Verbrauch</li>
+            <li>Planung beim Termin vor Ort</li>
+            <li>Unverbindliches Angebot vor dem Auftrag</li>
+          </ul>
+        </article>
+      </div>
+      <div class="grid grid--top plan-steuerung">
+        <div class="span-4 stack-4">
+          <h3>Dazu die Steuerung</h3>
+          <p class="muted">Jeder VoltSurfer lädt nach den Börsenpreisen. Du entscheidest, wer die Regeln festlegt: du selbst oder die VoltSurfer KI.</p>
+        </div>
+        <article class="card card--plan span-4 start-5">
+          <h3>Manuell <span class="badge">ohne Abo</span></h3>
+          <p class="muted">Du wählst die Funktionen selbst aus</p>
+          <ul class="checks">
+            <li>Im Preistal laden</li>
+            <li>Solarstrom zuerst</li>
+            <li>Reserve für den Morgen festlegen</li>
+            <li>E-Auto im Tal laden</li>
+          </ul>
+        </article>
+        <article class="card card--plan span-4 start-9">
+          <h3>VoltSurfer KI <span class="badge">im Abo</span></h3>
+          <p class="muted">Lernt erst deinen Haushalt kennen, dann steuert sie selbst</p>
+          <ul class="checks">
+            <li>Lernt zuerst, wann dein Haushalt Strom braucht</li>
+            <li>Steuert danach Speicher, Wärmepumpe und E-Auto selbst</li>
+            <li>So, dass am meisten übrig bleibt</li>
           </ul>
         </article>
       </div>
@@ -528,8 +685,8 @@
       <div class="grid grid--top">
         <div class="span-5 stack-5">
           <h2 id="anfrage-h">Beratung bei dir zu Hause</h2>
-          <p class="t-lead">Wir prüfen deinen Zählerschrank und rechnen mit deinen echten Verbrauchswerten, ab dem ersten Tag und mit Verbund.</p>
-          <div class="dg dg--steps" data-diagram><script type="application/json">{"layout":"timeline","size":"card","alt":"Nach der Anfrage kommt ein Termin vor Ort, dann ein verbindliches Angebot und der Einbau, meist an einem Tag.","steps":[{"label":"Anfrage","sub":"heute","icon":"ui:send"},{"label":"Termin","sub":"vor Ort","icon":"ui:house"},{"label":"Angebot","sub":"verbindlich","icon":"ui:file-text"},{"label":"Einbau","sub":"ein Tag","icon":"ui:wrench"}]}</script></div>
+          <p class="t-lead">Wir prüfen deinen Zählerschrank und rechnen mit deinen echten Verbrauchswerten, ab dem ersten Tag und mit VPP.</p>
+          <div class="dg dg--steps" data-diagram><script type="application/json">{"layout":"timeline","orient":"h","size":"card","alt":"Fünf Schritte: Anfrage, Termin vor Ort, ein unverbindliches Angebot, dann erteilst du den Auftrag, danach der Einbau, meist an einem Tag.","steps":[{"label":"Anfrage","sub":"heute","icon":"ui:send"},{"label":"Termin","sub":"vor Ort","icon":"ui:house"},{"label":"Angebot","sub":"unverbindlich","icon":"ui:file-text"},{"label":"Auftrag","sub":"erteilen","icon":"ui:handshake"},{"label":"Einbau","sub":"ein Tag","icon":"ui:wrench"}]}</script></div>
         </div>
         <form class="form span-6 start-7" action="/api/anfrage" method="post" data-endpoint="/api/anfrage" data-sent="Deine Beratungsanfrage ist da. Wir melden uns per E-Mail, um einen Termin zu finden." novalidate>
           <div class="field"><label for="f-name">Name</label>
@@ -548,6 +705,7 @@
             <legend>Welche Größe interessiert dich?</legend>
             <label class="choice" for="groesse-20"><span>VoltSurfer 20</span><input id="groesse-20" type="radio" name="interesse" value="voltsurfer_20"></label>
             <label class="choice" for="groesse-30"><span>VoltSurfer 30</span><input id="groesse-30" type="radio" name="interesse" value="voltsurfer_30"></label>
+            <label class="choice" for="groesse-individuell"><span>Individuell</span><input id="groesse-individuell" type="radio" name="interesse" value="individuell"></label>
             <label class="choice" for="groesse-offen"><span>Noch offen</span><input id="groesse-offen" type="radio" name="interesse" value="unklar" checked></label>
           </fieldset>
           <div class="field field--full">
@@ -587,7 +745,7 @@
       <div class="footer__legal">
         <span>&copy; 2026 VoltSurfer</span>
         <div class="socials"></div>
-        <p class="footnote"><sup>1</sup> Day-Ahead-Börsenpreise DE-LU vom 15.08.2025 bis 15.08.2026 (energy-charts.info, SMARD). Ersparnis aus einer Simulation mit diesen Preisen und Standardlastprofilen; der Anteil aus dem Verbund setzt dessen Betrieb voraus und hängt von der noch ausstehenden Festlegung der Bundesnetzagentur zum Speicherprivileg ab (§ 21 EnFG, § 118 EnWG).</p>
+        <p class="footnote"><sup>1</sup> Day-Ahead-Börsenpreise DE-LU vom 15.08.2025 bis 15.08.2026 (energy-charts.info, SMARD). Ersparnis aus einer Simulation mit diesen Preisen und Standardlastprofilen; der Anteil aus dem VPP setzt dessen Betrieb voraus und hängt von der noch ausstehenden Festlegung der Bundesnetzagentur zum Speicherprivileg ab (§ 21 EnFG, § 118 EnWG).</p>
       </div>
     </div>
   </div>
@@ -602,5 +760,6 @@
 <script type="module" src="assets/layout/layout.js"></script>
 <script type="module" src="assets/diagrams/mount.js"></script>
 <script type="module" src="rechner.js"></script>
+<script type="module" src="preisuhr.js"></script>
 </body>
 </html>

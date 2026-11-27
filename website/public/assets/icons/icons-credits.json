@@ -44,6 +44,17 @@
     "trademark": false
   },
   {
+    "file": "ui-handshake.svg",
+    "icon": "ui:handshake",
+    "name": "Handshake",
+    "kind": "line",
+    "source": "@iconify-json/lucide@1.2.100",
+    "author": "Lucide Contributors",
+    "licence": "ISC",
+    "url": "https://github.com/lucide-icons/lucide",
+    "trademark": false
+  },
+  {
     "file": "ui-heater.svg",
     "icon": "ui:heater",
     "name": "Heater",

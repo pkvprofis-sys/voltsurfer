@@ -33,7 +33,7 @@ create table if not exists public.voltsurfer_leads (
   eauto boolean,
   pv_vorhanden boolean,
   interesse text check (
-    interesse is null or interesse in ('voltsurfer_20', 'voltsurfer_30', 'unklar')
+    interesse is null or interesse in ('voltsurfer_20', 'voltsurfer_30', 'individuell', 'unklar')
   ),
 
   nachricht text check (nachricht is null or char_length(nachricht) <= 5000),
